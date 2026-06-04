@@ -4,23 +4,27 @@
 
 html {
   scroll-behavior: smooth;
-  background: #050814;
+  background: #080d1c;
+  overflow-x: hidden;
 }
 
 body {
   margin: 0;
-  background: #050814;
+  background:
+    radial-gradient(circle at -10% 20%, rgba(96,165,250,0.22), transparent 34%),
+    radial-gradient(circle at 110% 12%, rgba(167,139,250,0.20), transparent 32%),
+    radial-gradient(circle at 50% 100%, rgba(34,211,238,0.10), transparent 38%),
+    linear-gradient(180deg, #080d1c, #0d1426 45%, #0f172a);
   color: white;
   font-family: Inter, Arial, sans-serif;
+  overflow-x: hidden;
 }
 
 .page {
   min-height: 100vh;
-  background:
-    radial-gradient(circle at 20% 8%, rgba(96, 165, 250, 0.32), transparent 30%),
-    radial-gradient(circle at 84% 12%, rgba(167, 139, 250, 0.22), transparent 28%),
-    radial-gradient(circle at 50% 85%, rgba(34, 211, 238, 0.12), transparent 34%),
-    linear-gradient(180deg, #050814, #0b1020);
+  position: relative;
+  background: transparent;
+  z-index: 1;
 }
 
 .nav {
@@ -128,7 +132,7 @@ p {
   z-index: 4;
   border: 1px solid rgba(255,255,255,0.14);
   border-radius: 30px;
-  background: linear-gradient(180deg, rgba(15, 23, 42, 0.95), rgba(15, 23, 42, 0.78));
+  background: linear-gradient(180deg, rgba(24, 36, 64, 0.96), rgba(18, 28, 50, 0.84));
   box-shadow: 0 30px 90px rgba(0,0,0,0.42);
   backdrop-filter: blur(22px);
 }
@@ -917,7 +921,15 @@ input[type="range"] {
   bottom: 82%;
   opacity: 1;
 }
+h1,
+h2 {
+  color: #f8fafc;
+  text-shadow: 0 0 32px rgba(125, 211, 252, 0.12);
+}
 
+.textCard {
+  border-color: rgba(148, 197, 253, 0.22);
+}
 @media (max-width: 980px) {
   .nav {
     display: none;
@@ -948,4 +960,434 @@ input[type="range"] {
   .poreType {
     grid-template-columns: 1fr;
   }
+}
+.caption {
+  font-size: 13px;
+  opacity: 0.75;
+  max-width: 340px;
+  left: auto;
+}
+
+.rockSlice {
+  filter: drop-shadow(0 0 40px rgba(96, 165, 250, 0.18));
+}
+
+.rockSlice::after {
+  content: "surface externe · mésopores · micropores";
+  position: absolute;
+  left: 24px;
+  bottom: -42px;
+  padding: 8px 12px;
+  border-radius: 999px;
+  background: rgba(2, 6, 23, 0.58);
+  border: 1px solid rgba(255,255,255,0.12);
+  color: rgba(224,242,254,0.82);
+  font-size: 12px;
+  transform: rotate(10deg);
+}
+/* HERO SANS VISUEL BROUILLON */
+
+.heroFull {
+  grid-template-columns: 1fr;
+  position: relative;
+  overflow: visible;
+  min-height: 100vh;
+}
+
+.heroTextWide {
+  max-width: 1200px;
+  z-index: 3;
+}
+
+.heroTextWide h1 {
+  font-size: clamp(74px, 12vw, 170px);
+  max-width: 1250px;
+}
+
+.heroTextWide .lead {
+  max-width: 980px;
+  font-size: clamp(24px, 3vw, 44px);
+}
+
+.nitrogenField {
+  position: absolute;
+  inset: -22vh -28vw;
+  overflow: visible;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.nitrogenField span {
+  position: absolute;
+  border-radius: 50%;
+  background: #e0f2fe;
+  box-shadow: 0 0 18px #7dd3fc;
+  opacity: 0.72;
+  animation: nitrogenFloat ease-in-out infinite;
+}
+
+@keyframes nitrogenFloat {
+  0% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(90px, -70px, 0) scale(1.25);
+    opacity: 0.35;
+  }
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+}
+
+/* SEQUENCE ADSORPTION CORRIGÉE */
+
+.sequencePanel {
+  overflow: hidden;
+}
+
+.sequenceBigValue {
+  font-size: clamp(28px, 3vw, 46px);
+  line-height: 1.05;
+}
+
+.cleanSequence {
+  min-height: 520px;
+  position: relative;
+  overflow: hidden;
+  border-radius: 32px;
+  border: 1px solid rgba(255,255,255,0.14);
+  background:
+    linear-gradient(90deg, rgba(148,163,184,0.10) 1px, transparent 1px),
+    linear-gradient(rgba(148,163,184,0.10) 1px, transparent 1px),
+    radial-gradient(circle at 50% 20%, rgba(96,165,250,0.16), transparent 34%),
+    linear-gradient(180deg, rgba(2,6,23,0.28), rgba(15,23,42,0.76));
+  background-size: 34px 34px, 34px 34px, auto, auto;
+  box-shadow: 0 30px 90px rgba(0,0,0,0.38);
+}
+
+.seqTitle,
+.capTitle {
+  position: absolute;
+  top: 18px;
+  left: 18px;
+  padding: 8px 12px;
+  border-radius: 999px;
+  color: #dbeafe;
+  background: rgba(2,6,23,0.56);
+  border: 1px solid rgba(255,255,255,0.12);
+  font-size: 13px;
+  z-index: 5;
+}
+
+.seqPore {
+  position: absolute;
+  inset: 72px 80px 72px;
+}
+
+.seqWall {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 105px;
+  border-radius: 30px;
+  background:
+    repeating-linear-gradient(
+      45deg,
+      rgba(148,163,184,0.20) 0 12px,
+      rgba(30,41,59,0.62) 12px 24px
+    );
+  border: 1px solid rgba(255,255,255,0.12);
+}
+
+.seqWall.left {
+  left: 0;
+}
+
+.seqWall.right {
+  right: 0;
+}
+
+.step0 .seqWall.left {
+  left: 16%;
+}
+
+.step0 .seqWall.right {
+  right: 16%;
+}
+
+.seqMicroFill {
+  position: absolute;
+  left: 50%;
+  top: 20px;
+  width: 34px;
+  height: 0;
+  transform: translateX(-50%);
+  border-radius: 999px;
+  background: linear-gradient(180deg, #22d3ee, #60a5fa);
+  box-shadow: 0 0 26px rgba(34,211,238,0.5);
+  transition: height 0.45s ease;
+}
+
+.step0 .seqMicroFill {
+  top: 20px;
+  bottom: 20px;
+  height: auto;
+  background: transparent;
+  box-shadow: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.microStack {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.seqMono,
+.seqMulti,
+.capMono,
+.capMulti {
+  position: absolute;
+  top: 18px;
+  bottom: 18px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: opacity 0.45s ease;
+}
+
+.seqMono,
+.seqMulti {
+  opacity: 0;
+}
+
+.seqMono.left {
+  left: 118px;
+}
+
+.seqMono.right {
+  right: 118px;
+}
+
+.seqMulti.left {
+  left: 145px;
+}
+
+.seqMulti.right {
+  right: 145px;
+}
+
+.seqMono span,
+.seqMulti span,
+.capMono span,
+.capMulti span,
+.microStack span {
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  background: #e0f2fe;
+  box-shadow: 0 0 16px #7dd3fc;
+}
+
+.step1 .seqMono,
+.step2 .seqMono,
+.step3 .seqMono {
+  opacity: 1;
+}
+
+.step2 .seqMulti,
+.step3 .seqMulti {
+  opacity: 1;
+}
+
+.seqCondensed {
+  position: absolute;
+  left: 170px;
+  right: 170px;
+  bottom: 0;
+  height: 0;
+  border-radius: 32px 32px 0 0;
+  background: linear-gradient(180deg, rgba(34,211,238,0.58), rgba(96,165,250,0.96));
+  box-shadow: 0 0 40px rgba(34,211,238,0.38);
+  transition: height 0.45s ease;
+}
+
+.seqMeniscus {
+  position: absolute;
+  left: 170px;
+  right: 170px;
+  bottom: 0;
+  height: 18px;
+  border-radius: 50%;
+  background: rgba(224,242,254,0.76);
+  box-shadow: 0 0 22px rgba(125,211,252,0.65);
+  opacity: 0;
+  transition: bottom 0.45s ease, opacity 0.45s ease;
+}
+
+.step3 .seqCondensed {
+  height: 78%;
+}
+
+.step3 .seqMeniscus {
+  bottom: 78%;
+  opacity: 1;
+}
+
+.seqCaption {
+  position: absolute;
+  left: 22px;
+  right: 22px;
+  bottom: 18px;
+  text-align: center;
+  color: #bfdbfe;
+  font-size: 13px;
+}
+
+/* CONDENSATION CAPILLAIRE CORRIGÉE */
+
+.cleanCapillary {
+  min-height: 520px;
+  position: relative;
+  overflow: hidden;
+  border-radius: 32px;
+  border: 1px solid rgba(255,255,255,0.14);
+  background:
+    linear-gradient(90deg, rgba(148,163,184,0.10) 1px, transparent 1px),
+    linear-gradient(rgba(148,163,184,0.10) 1px, transparent 1px),
+    radial-gradient(circle at 50% 20%, rgba(96,165,250,0.16), transparent 34%),
+    linear-gradient(180deg, rgba(2,6,23,0.28), rgba(15,23,42,0.76));
+  background-size: 34px 34px, 34px 34px, auto, auto;
+  box-shadow: 0 30px 90px rgba(0,0,0,0.38);
+}
+
+.capPore {
+  position: absolute;
+  inset: 78px 120px 72px;
+}
+
+.capWall {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 105px;
+  border-radius: 30px;
+  background:
+    repeating-linear-gradient(
+      45deg,
+      rgba(148,163,184,0.20) 0 12px,
+      rgba(30,41,59,0.62) 12px 24px
+    );
+  border: 1px solid rgba(255,255,255,0.12);
+}
+
+.capWall.left {
+  left: 0;
+}
+
+.capWall.right {
+  right: 0;
+}
+
+.capMono.left {
+  left: 118px;
+}
+
+.capMono.right {
+  right: 118px;
+}
+
+.capMulti.left {
+  left: 145px;
+}
+
+.capMulti.right {
+  right: 145px;
+}
+
+.capLiquid {
+  position: absolute;
+  left: 170px;
+  right: 170px;
+  bottom: 0;
+  height: 0;
+  border-radius: 34px 34px 0 0;
+  background: linear-gradient(180deg, rgba(34,211,238,0.58), rgba(96,165,250,0.96));
+  box-shadow: 0 0 40px rgba(34,211,238,0.38);
+}
+
+.capMeniscus {
+  position: absolute;
+  left: 170px;
+  right: 170px;
+  height: 18px;
+  bottom: 0;
+  border-radius: 50%;
+  background: rgba(224,242,254,0.76);
+  box-shadow: 0 0 22px rgba(125,211,252,0.65);
+}
+
+.smallMacro {
+  position: absolute;
+  right: 22px;
+  bottom: 22px;
+  display: grid;
+  gap: 8px;
+  justify-items: center;
+  color: #bfdbfe;
+  font-size: 12px;
+  text-align: center;
+}
+
+.smallMacroTube {
+  width: 58px;
+  height: 86px;
+  border-radius: 30px;
+  border: 2px solid rgba(226,232,240,0.25);
+  background: rgba(2,6,23,0.58);
+  overflow: hidden;
+  position: relative;
+}
+
+.smallMacroFill {
+  position: absolute;
+  inset: auto 0 0 0;
+  background: linear-gradient(180deg, rgba(167,139,250,0.55), rgba(96,165,250,0.92));
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    radial-gradient(circle at -8% 35%, rgba(96,165,250,0.16), transparent 30%),
+    radial-gradient(circle at 108% 25%, rgba(167,139,250,0.14), transparent 32%);
+}
+
+.page::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+
+  background:
+    linear-gradient(
+      90deg,
+      transparent 17%,
+      rgba(96,165,250,0.05) 18%,
+      transparent 19%,
+      transparent 81%,
+      rgba(96,165,250,0.05) 82%,
+      transparent 83%
+    );
 }

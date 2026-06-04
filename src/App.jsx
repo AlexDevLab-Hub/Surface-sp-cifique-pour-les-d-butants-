@@ -7,28 +7,31 @@ function App() {
     <main className="page">
       <Nav />
 
-      <section id="intro" className="section hero">
-        <div className="heroText">
-          <p className="badge">Cours interactif · Surface spécifique</p>
-          <h1>Comprendre la surface spécifique.</h1>
-          <p className="lead">
-            Une poudre peut sembler petite, mais cacher une surface interne immense grâce à ses pores.
-          </p>
-        </div>
+      <section id="intro" className="section hero heroFull">
+  <NitrogenField />
 
-        <PremiumPoreVisual />
+  <div className="heroText heroTextWide">
+    <p className="badge">Cours interactif · Surface spécifique</p>
+    <h1>Comprendre la surface spécifique.</h1>
+    <p className="lead">
+      Une bille peut sembler petite, mais cacher une surface interne immense grâce à ses pores.
+      </p>
+      </div>
       </section>
 
       <section id="surface" className="section">
         <TextCard
-          badge="1. L’idée de base"
-          title="La surface utile est souvent cachée à l’intérieur."
-        >
-          <p>
-            La surface spécifique correspond à toute la surface accessible dans un matériau.
-            Plus il y a de pores, plus l’azote peut entrer et toucher de parois.
-          </p>
-        </TextCard>
+  badge="1. L’idée de base"
+  title="Ce n’est pas le volume qui compte, c’est la surface accessible."
+>
+  <p>
+    Imaginez une bille compacte : l’azote peut seulement toucher l’extérieur.
+  </p>
+  <p>
+    Maintenant, imaginez une bille remplie de tunnels minuscules : l’azote peut entrer
+    et toucher beaucoup plus de parois. La surface disponible augmente fortement.
+  </p>
+</TextCard>
 
         <div className="surfaceCards">
           <InfoCard title="Compact" text="Peu de surface accessible." type="compact" />
@@ -84,14 +87,18 @@ function App() {
 
       <section id="azote" className="section">
         <TextCard
-          badge="5. Condensation capillaire"
-          title="Dans un mésopore, l’azote peut finir par former un liquide."
-        >
-          <p>
-            À faible P/P₀, l’azote est surtout gazeux. À forte P/P₀, il peut condenser
-            dans les pores comme dans de minuscules capillaires.
-          </p>
-        </TextCard>
+  badge="5. Condensation capillaire"
+  title="La condensation capillaire concerne surtout les mésopores."
+>
+  <p>
+    Dans les micropores, on parle plutôt de remplissage de micropores : les parois sont
+    si proches que l’azote est fortement attiré dès les faibles P/P₀.
+  </p>
+  <p>
+    Dans les mésopores, l’azote peut former plusieurs couches puis condenser par capillarité.
+    Les plus petits macropores peuvent aussi se remplir, mais seulement très près de P/P₀ = 1.
+  </p>
+</TextCard>
 
         <CapillaryCondensation />
       </section>
@@ -127,6 +134,36 @@ function Nav() {
       <a href="#azote">Condensation</a>
       <a href="#energie">Énergie</a>
     </nav>
+  )
+}
+function NitrogenField() {
+  const molecules = useMemo(() => {
+    return Array.from({ length: 90 }, (_, i) => ({
+      id: i,
+      left: Math.random() * 100,
+      top: Math.random() * 100,
+      delay: Math.random() * 6,
+      duration: 5 + Math.random() * 6,
+      size: 5 + Math.random() * 7,
+    }))
+  }, [])
+
+  return (
+    <div className="nitrogenField">
+      {molecules.map((m) => (
+        <span
+          key={m.id}
+          style={{
+            left: `${m.left}%`,
+            top: `${m.top}%`,
+            width: `${m.size}px`,
+            height: `${m.size}px`,
+            animationDelay: `${m.delay}s`,
+            animationDuration: `${m.duration}s`,
+          }}
+        />
+      ))}
+    </div>
   )
 }
 
@@ -302,27 +339,28 @@ function AdsorptionSequence() {
 
   const steps = [
     {
-      title: '1. Micropores',
-      text: 'Les micropores se remplissent en premier car les parois sont très proches.',
+      title: '1. Remplissage des micropores',
+      text: 'Les micropores se remplissent en premier : c’est un remplissage de volume très étroit, pas une monocouche classique.',
     },
     {
       title: '2. Monocouche',
-      text: 'Une première couche de molécules se forme sur les surfaces accessibles.',
+      text: 'Une première couche d’azote se forme sur les parois internes accessibles.',
     },
     {
       title: '3. Multicouche',
-      text: 'De nouvelles molécules viennent se déposer sur la première couche.',
+      text: 'D’autres molécules s’empilent sur la première couche, toujours à l’intérieur du pore.',
     },
     {
-      title: '4. Condensation',
-      text: 'À forte P/P₀, l’azote peut condenser dans les mésopores.',
+      title: '4. Condensation capillaire',
+      text: 'Dans les mésopores, le centre du pore finit par se remplir : un ménisque apparaît.',
     },
   ]
 
   return (
-    <div className="sequenceGrid">
-      <div className="controlPanel">
-        <div className="bigValue">{steps[step].title}</div>
+    <div className="simGrid">
+      <div className="controlPanel sequencePanel">
+        <div className="bigValue sequenceBigValue">{steps[step].title}</div>
+
         <input
           type="range"
           min="0"
@@ -330,28 +368,48 @@ function AdsorptionSequence() {
           value={step}
           onChange={(e) => setStep(Number(e.target.value))}
         />
+
         <div className="state">Étape {step + 1}/4</div>
         <p>{steps[step].text}</p>
       </div>
 
-      <div className={`adsorptionVisual step${step}`}>
-        <div className="surfacePlate topPlate" />
-        <div className="surfacePlate bottomPlate" />
+      <div className={`cleanSequence step${step}`}>
+        <div className="seqTitle">Vue simplifiée dans un pore</div>
 
-        <div className="microSlot">
-          <div className="microLiquid" />
+        <div className="seqPore">
+          <div className="seqWall left" />
+          <div className="seqWall right" />
+
+          <div className="seqMicroFill">
+  {step === 0 && (
+    <div className="microStack">
+      {Array.from({ length: 12 }).map((_, i) => (
+        <span key={i} />
+      ))}
+    </div>
+  )}
+</div>
+
+          <div className="seqMono left">
+            {Array.from({ length: 10 }).map((_, i) => <span key={i} />)}
+          </div>
+          <div className="seqMono right">
+            {Array.from({ length: 10 }).map((_, i) => <span key={i} />)}
+          </div>
+
+          <div className="seqMulti left">
+            {Array.from({ length: 8 }).map((_, i) => <span key={i} />)}
+          </div>
+          <div className="seqMulti right">
+            {Array.from({ length: 8 }).map((_, i) => <span key={i} />)}
+          </div>
+
+          <div className="seqCondensed" />
+          <div className="seqMeniscus" />
         </div>
 
-        <div className="monoLayer">
-          {Array.from({ length: 18 }).map((_, i) => <span key={i} />)}
-        </div>
-
-        <div className="multiLayer">
-          {Array.from({ length: 15 }).map((_, i) => <span key={i} />)}
-        </div>
-
-        <div className="capillarySlot">
-          <div className="capillaryLiquid" />
+        <div className="seqCaption">
+          Micropore → monocouche → multicouche → condensation dans un mésopore
         </div>
       </div>
     </div>
@@ -359,21 +417,35 @@ function AdsorptionSequence() {
 }
 
 function CapillaryCondensation() {
-  const [value, setValue] = useState(20)
+  const [value, setValue] = useState(4)
   const p = value / 100
-  const fill = p < 0.68 ? 0 : clamp((p - 0.68) / 0.32, 0, 1) * 88
 
-  let state = 'Gaz + adsorption'
-  let text = 'L’azote est surtout gazeux. Quelques molécules s’accrochent aux parois.'
+  const monoOpacity = clamp((p - 0.22) / 0.16, 0, 1)
+  const multiOpacity = clamp((p - 0.42) / 0.18, 0, 1)
+  const liquid = p < 0.68 ? 0 : clamp((p - 0.68) / 0.24, 0, 1) * 82
+  const macroLimit = p < 0.96 ? 0 : clamp((p - 0.96) / 0.04, 0, 1) * 55
 
-  if (p >= 0.35 && p < 0.68) {
-    state = 'Couches adsorbées'
-    text = 'Les parois du mésopore se couvrent progressivement de molécules.'
+  let state = 'Gaz dominant'
+  let text = 'À très faible P/P₀, l’azote est surtout gazeux. Le mésopore n’est pas encore recouvert.'
+
+  if (p >= 0.22 && p < 0.42) {
+    state = 'Monocouche'
+    text = 'Une première couche apparaît sur les parois internes du mésopore.'
   }
 
-  if (p >= 0.68) {
+  if (p >= 0.42 && p < 0.68) {
+    state = 'Multicouche'
+    text = 'Plusieurs couches se forment avant la condensation capillaire.'
+  }
+
+  if (p >= 0.68 && p < 0.96) {
     state = 'Condensation capillaire'
-    text = 'Le centre du pore se remplit : une phase condensée apparaît dans le mésopore.'
+    text = 'Le centre du mésopore se remplit : une phase condensée apparaît.'
+  }
+
+  if (p >= 0.96) {
+    state = 'Cas limite macropore'
+    text = 'Très proche de P/P₀ = 1, les plus petits macropores peuvent commencer à se remplir.'
   }
 
   return (
@@ -391,25 +463,49 @@ function CapillaryCondensation() {
         <p>{text}</p>
       </div>
 
-      <div className="capillaryVisual">
-        <div className="tubeWall leftTube" />
-        <div className="tubeWall rightTube" />
+      <div className="cleanCapillary">
+        <div className="capTitle">Mésopore : monocouche → multicouche → condensation</div>
 
-        <div className="adsorbedDots leftDots">
-          {Array.from({ length: 12 }).map((_, i) => <span key={i} />)}
+        <div className="capPore">
+          <div className="capWall left" />
+          <div className="capWall right" />
+
+          <div className="capMono left" style={{ opacity: monoOpacity }}>
+            {Array.from({ length: 12 }).map((_, i) => <span key={i} />)}
+          </div>
+          <div className="capMono right" style={{ opacity: monoOpacity }}>
+            {Array.from({ length: 12 }).map((_, i) => <span key={i} />)}
+          </div>
+
+          <div className="capMulti left" style={{ opacity: multiOpacity }}>
+            {Array.from({ length: 10 }).map((_, i) => <span key={i} />)}
+          </div>
+          <div className="capMulti right" style={{ opacity: multiOpacity }}>
+            {Array.from({ length: 10 }).map((_, i) => <span key={i} />)}
+          </div>
+
+          <motion.div
+            className="capLiquid"
+            animate={{ height: `${liquid}%` }}
+            transition={{ duration: 0.4 }}
+          />
+          <motion.div
+            className="capMeniscus"
+            animate={{ bottom: `${liquid}%`, opacity: liquid > 4 ? 1 : 0 }}
+            transition={{ duration: 0.4 }}
+          />
         </div>
 
-        <div className="adsorbedDots rightDots">
-          {Array.from({ length: 12 }).map((_, i) => <span key={i} />)}
+        <div className="smallMacro">
+          <span>Petit macropore<br />cas limite près de 1</span>
+          <div className="smallMacroTube">
+            <motion.div
+              className="smallMacroFill"
+              animate={{ height: `${macroLimit}%` }}
+              transition={{ duration: 0.4 }}
+            />
+          </div>
         </div>
-
-        <motion.div
-          className="condensedLiquid"
-          animate={{ height: `${fill}%` }}
-          transition={{ duration: 0.4 }}
-        />
-
-        <div className="meniscus" style={{ bottom: `${fill}%`, opacity: fill > 4 ? 1 : 0 }} />
       </div>
     </div>
   )
