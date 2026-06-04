@@ -1,10 +1,19 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { motion } from 'framer-motion'
 import './App.css'
 
 function App() {
+  useEffect(() => {
+    if ('scrollRestoration' in history) {
+      history.scrollRestoration = 'manual'
+    }
+
+    window.scrollTo(0, 0)
+  }, [])
+
   return (
     <main className="page">
+      <GlobalNitrogen />
       <Nav />
 
       <section id="intro" className="section hero heroFull">
@@ -120,6 +129,37 @@ function App() {
         <EnergyVisual />
       </section>
     </main>
+  )
+}
+
+function GlobalNitrogen() {
+  const molecules = useMemo(() => {
+    return Array.from({ length: 95 }, (_, i) => ({
+      id: i,
+      left: -45 + Math.random() * 190,
+      top: Math.random() * 100,
+      delay: Math.random() * 8,
+      duration: 5 + Math.random() * 7,
+      size: 5 + Math.random() * 7,
+    }))
+  }, [])
+
+  return (
+    <div className="globalNitrogen">
+      {molecules.map((m) => (
+        <span
+          key={m.id}
+          style={{
+            left: `${m.left}%`,
+            top: `${m.top}%`,
+            width: `${m.size}px`,
+            height: `${m.size}px`,
+            animationDelay: `${m.delay}s`,
+            animationDuration: `${m.duration}s`,
+          }}
+        />
+      ))}
+    </div>
   )
 }
 
