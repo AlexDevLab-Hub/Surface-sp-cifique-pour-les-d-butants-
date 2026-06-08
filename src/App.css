@@ -455,8 +455,46 @@ input[type="range"] {
   right: 0;
   bottom: 0;
   height: 0%;
-  background: linear-gradient(180deg, rgba(34,211,238,0.82), rgba(96,165,250,0.92));
+
+  background: linear-gradient(
+    180deg,
+    rgba(34,211,238,0.82),
+    rgba(96,165,250,0.92)
+  );
+
   box-shadow: 0 0 24px rgba(34,211,238,0.35);
+
+  overflow: visible;
+}
+
+.poreFill::before {
+  content: "";
+  position: absolute;
+  opacity: 0;
+}
+
+.mesoPore .poreFill::before {
+  opacity: 1;
+  left: -8%;
+  right: -8%;
+  top: -6px;
+  height: 12px;
+  background: #08111f;
+  border-radius: 0 0 50% 50%;
+}
+
+.macroPore .poreFill::before {
+  opacity: 1;
+  left: -18%;
+  right: -18%;
+  top: -18px;
+  height: 36px;
+  background: #08111f;
+  border-radius: 0 0 50% 50%;
+}
+
+.mesoPore .poreFill.full::before {
+  opacity: 0;
 }
 
 .microPore {

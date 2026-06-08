@@ -313,9 +313,9 @@ function PP0Simulator() {
   const [value, setValue] = useState(8)
   const p = value / 100
 
-  const microFill = clamp(p / 0.12, 0, 1) * 100
-  const mesoFill = clamp((p - 0.22) / 0.48, 0, 1) * 100
-  const macroFill = clamp((p - 0.72) / 0.26, 0, 1) * 100
+  const microFill = clamp(p / 0.10, 0, 1) * 100
+  const mesoFill = clamp((p - 0.11) / 0.70, 0, 1) * 100
+  const macroFill = clamp((p - 0.85) / 0.26, 0, 1) * 60
 
   let state = 'Micropores'
   let explanation = 'À très faible P/P₀, les micropores commencent déjà à se remplir.'
@@ -366,7 +366,7 @@ function PoreShape({ className, fill }) {
   return (
     <div className={`poreShape ${className}`}>
       <motion.div
-        className="poreFill"
+        className={`poreFill ${fill > 95 ? 'full' : ''}`}
         animate={{ height: `${fill}%` }}
         transition={{ duration: 0.35 }}
       />
