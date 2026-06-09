@@ -315,7 +315,7 @@ function PP0Simulator() {
 
   const microFill = clamp(p / 0.10, 0, 1) * 100
   const mesoFill = clamp((p - 0.11) / 0.70, 0, 1) * 100
-  const macroFill = clamp((p - 0.85) / 0.26, 0, 1) * 60
+  const macroFill = clamp((p - 0.75) / 0.30, 0, 1) * 60
 
   let state = 'Micropores'
   let explanation = 'À très faible P/P₀, les micropores commencent déjà à se remplir.'
