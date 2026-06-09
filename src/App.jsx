@@ -128,6 +128,21 @@ function App() {
 
         <EnergyVisual />
       </section>
+      <section id="conclusion" className="section twoCols">
+  <TextCard
+    badge="7. Conclusion"
+    title="La BET transforme une adsorption invisible en surface mesurable."
+  >
+    <p>
+      Toute la mesure BET consiste à estimer combien de surface est accessible aux molécules d’azote.
+    </p>
+    <p>
+      Plus les molécules peuvent accéder à des parois internes, plus la surface spécifique calculée est élevée.
+    </p>
+  </TextCard>
+
+  <BETConclusion />
+</section>
     </main>
   )
 }
@@ -173,6 +188,7 @@ function Nav() {
       <a href="#sequence">Adsorption</a>
       <a href="#azote">Condensation</a>
       <a href="#energie">Énergie</a>
+      <a href="#conclusion">Conclusion</a>
     </nav>
   )
 }
@@ -546,6 +562,71 @@ function CapillaryCondensation() {
             />
           </div>
         </div>
+      </div>
+    </div>
+  )
+}
+
+function BETConclusion() {
+  const [level, setLevel] = useState(0)
+
+  const steps = [
+    {
+      label: 'Compact',
+      value: 2,
+      text: 'Peu de surface accessible.',
+    },
+    {
+      label: 'Poreux',
+      value: 85,
+      text: 'Les pores ajoutent de la surface interne.',
+    },
+    {
+      label: 'Très poreux',
+      value: 250,
+      text: 'L’azote atteint beaucoup plus de parois.',
+    },
+    {
+      label: 'Microporeux',
+      value: 500,
+      text: 'La surface accessible devient très élevée.',
+    },
+  ]
+
+  const current = steps[level]
+
+  return (
+    <div className="betVisual">
+      <div className={`betParticle betLevel${level}`}>
+<span className="betPore p1" />
+<span className="betPore p2" />
+<span className="betPore p3" />
+<span className="betPore p4" />
+<span className="betPore p5" />
+
+<span className="betPore p6" />
+<span className="betPore p7" />
+
+<span className="betPore p8" />
+<span className="betPore p9" />
+
+        {Array.from({ length: 30 }).map((_, i) => (
+          <span key={i} className={`betNitrogen n${i}`} />
+        ))}
+      </div>
+
+      <div className="betCounter">
+        <span>{current.label}</span>
+        <strong>{current.value} m²/g</strong>
+        <p>{current.text}</p>
+
+        <input
+          type="range"
+          min="0"
+          max="3"
+          value={level}
+          onChange={(e) => setLevel(Number(e.target.value))}
+        />
       </div>
     </div>
   )
