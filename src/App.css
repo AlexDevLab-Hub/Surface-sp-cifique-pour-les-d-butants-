@@ -415,7 +415,7 @@ input[type="range"] {
 
 .state {
   width: fit-content;
-  margin-bottom: 16px;
+  margin: 0 auto 16px;
   padding: 9px 14px;
   border-radius: 999px;
   border: 1px solid rgba(96,165,250,0.35);
@@ -1276,19 +1276,6 @@ h2 {
   transition: height 0.45s ease;
 }
 
-.seqMeniscus {
-  position: absolute;
-  left: 170px;
-  right: 170px;
-  bottom: 0;
-  height: 18px;
-  border-radius: 50%;
-  background: rgba(224,242,254,0.76);
-  box-shadow: 0 0 22px rgba(125,211,252,0.65);
-  opacity: 0;
-  transition: bottom 0.45s ease, opacity 0.45s ease;
-}
-
 .step3 .seqCondensed {
   height: 78%;
 }
@@ -1701,4 +1688,17 @@ body,
 .betCounter p {
   margin: 14px auto 18px;
   max-width: 420px;
+}
+
+.capLiquid {
+  z-index: 10 !important;
+}
+
+.capMeniscus {
+  z-index: 11 !important;
+}
+
+.capMono,
+.capMulti {
+  z-index: 4 !important;
 }

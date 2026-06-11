@@ -20,10 +20,9 @@ function App() {
   <NitrogenField />
 
   <div className="heroText heroTextWide">
-    <p className="badge">Cours interactif · Surface spécifique</p>
-    <h1>Comprendre la surface spécifique.</h1>
+    <h1>Comprendre l'adsorption d'azote</h1>
     <p className="lead">
-      Une bille peut sembler petite, mais cacher une surface interne immense grâce à ses pores.
+      Une bille peut sembler petite, mais révéler une surface interne immense grâce à sa porosité.
       </p>
       </div>
       </section>
@@ -59,7 +58,6 @@ function App() {
             et les macropores sont de grandes cavités.
           </p>
           <p>
-            Les micropores se remplissent très tôt car leurs parois sont très proches.
           </p>
         </TextCard>
 
@@ -72,9 +70,15 @@ function App() {
           title="Fais varier P/P₀ et observe le remplissage."
         >
           <p>
-            P₀ est la pression de saturation de l’azote. P/P₀ indique à quel point
-            on se rapproche de cette saturation.
+            P représente la pression de l'azote gazeux autour du matériau analysé.
           </p>
+          <p>
+            P₀ est la pression de saturation de l’azote. C'est a dire la pression à laquelle il se liquéfie.
+          </p>
+          <p>
+            P/P₀ indique à quel point on se rapproche de cette saturation.
+          </p>
+
         </TextCard>
 
         <PP0Simulator />
@@ -94,43 +98,9 @@ function App() {
         <AdsorptionSequence />
       </section>
 
-      <section id="azote" className="section">
-        <TextCard
-  badge="5. Condensation capillaire"
-  title="La condensation capillaire concerne surtout les mésopores."
->
-  <p>
-    Dans les micropores, on parle plutôt de remplissage de micropores : les parois sont
-    si proches que l’azote est fortement attiré dès les faibles P/P₀.
-  </p>
-  <p>
-    Dans les mésopores, l’azote peut former plusieurs couches puis condenser par capillarité.
-    Les plus petits macropores peuvent aussi se remplir, mais seulement très près de P/P₀ = 1.
-  </p>
-</TextCard>
-
-        <CapillaryCondensation />
-      </section>
-
-      <section id="energie" className="section twoCols">
-        <TextCard
-          badge="6. Énergie de surface"
-          title="Pourquoi les micropores se remplissent avant le reste ?"
-        >
-          <p>
-            Sur une surface externe, l’azote est attiré par une seule paroi.
-            Dans un micropore, deux parois proches attirent la molécule en même temps.
-          </p>
-          <p>
-            Cette attraction renforcée explique le remplissage très précoce des micropores.
-          </p>
-        </TextCard>
-
-        <EnergyVisual />
-      </section>
       <section id="conclusion" className="section twoCols">
   <TextCard
-    badge="7. Conclusion"
+    badge="5. Conclusion"
     title="La BET transforme une adsorption invisible en surface mesurable."
   >
     <p>
@@ -186,8 +156,6 @@ function Nav() {
       <a href="#pores">Pores</a>
       <a href="#pp0">P/P₀</a>
       <a href="#sequence">Adsorption</a>
-      <a href="#azote">Condensation</a>
-      <a href="#energie">Énergie</a>
       <a href="#conclusion">Conclusion</a>
     </nav>
   )
@@ -297,9 +265,9 @@ function InfoCard({ title, text, type }) {
 function PoreTypes() {
   return (
     <div className="poreTypes">
-      <PoreType name="Micropore" size="< 2 nm" type="micro" text="Très étroit : remplissage très précoce." />
-      <PoreType name="Mésopore" size="2 à 50 nm" type="meso" text="Tunnel intermédiaire : adsorption puis condensation possible." />
-      <PoreType name="Macropore" size="> 50 nm" type="macro" text="Grande cavité : surtout visible à forte P/P₀." />
+      <PoreType name="Micropore" size="< 2 nm" type="micro" text="Pore très étroit." />
+      <PoreType name="Mésopore" size="2 à 50 nm" type="meso" text="Pore de taille intermédiaire." />
+      <PoreType name="Macropore" size="> 50 nm" type="macro" text="Grande cavité." />
     </div>
   )
 }
@@ -336,9 +304,9 @@ function PP0Simulator() {
   let state = 'Micropores'
   let explanation = 'À très faible P/P₀, les micropores commencent déjà à se remplir.'
 
-  if (p >= 0.15 && p < 0.55) {
+  if (p >= 0.11 && p < 0.55) {
     state = 'Adsorption progressive'
-    explanation = 'Les micropores sont largement remplis. Les mésopores commencent à participer.'
+    explanation = 'Les micropores sont largement remplis. Les mésopores commencent à se remplir à leur tour.'
   }
 
   if (p >= 0.55 && p < 0.85) {
@@ -347,34 +315,38 @@ function PP0Simulator() {
   }
 
   if (p >= 0.85) {
-    state = 'Proche saturation'
-    explanation = 'Les grandes cavités et espaces entre particules deviennent plus visibles.'
+    state = 'Proche de la saturation'
+    explanation = 'À l’approche de la saturation, l’azote atteint progressivement les plus grandes cavités du matériau.'
   }
 
   return (
-    <div className="simGrid">
-      <div className="controlPanel">
-        <div className="bigValue">P/P₀ = {p.toFixed(2)}</div>
-        <input
-          type="range"
-          min="0"
-          max="100"
-          value={value}
-          onChange={(e) => setValue(Number(e.target.value))}
-        />
-        <div className="state">{state}</div>
-        <p>{explanation}</p>
-      </div>
+<div className="simGrid">
+  <div className="controlPanel">
+    <div className="bigValue">
+  P/P₀ = {p.toFixed(2)}
+</div>
 
-      <div className="poreMachine">
-        <PoreShape className="microPore a" fill={microFill} />
-        <PoreShape className="microPore b" fill={microFill} />
-        <PoreShape className="microPore c" fill={microFill} />
-        <PoreShape className="mesoPore a" fill={mesoFill} />
-        <PoreShape className="mesoPore b" fill={mesoFill} />
-        <PoreShape className="macroPore a" fill={macroFill} />
-      </div>
-    </div>
+    <input
+      type="range"
+      min="0"
+      max="100"
+      value={value}
+      onChange={(e) => setValue(Number(e.target.value))}
+    />
+
+    <div className="state">{state}</div>
+    <p>{explanation}</p>
+  </div>
+
+  <div className="poreMachine">
+    <PoreShape className="microPore a" fill={microFill} />
+    <PoreShape className="microPore b" fill={microFill} />
+    <PoreShape className="microPore c" fill={microFill} />
+    <PoreShape className="mesoPore a" fill={mesoFill} />
+    <PoreShape className="mesoPore b" fill={mesoFill} />
+    <PoreShape className="macroPore a" fill={macroFill} />
+  </div>
+</div>
   )
 }
 
@@ -396,19 +368,19 @@ function AdsorptionSequence() {
   const steps = [
     {
       title: '1. Remplissage des micropores',
-      text: 'Les micropores se remplissent en premier : c’est un remplissage de volume très étroit, pas une monocouche classique.',
+      text: 'Les micropores se remplissent en premier : c’est un remplissage de volume très étroit. (environ P/P0 = 0,1)',
     },
     {
       title: '2. Monocouche',
-      text: 'Une première couche d’azote se forme sur les parois internes accessibles.',
+      text: 'Une première couche d’azote se forme sur les parois internes accessibles. C’est a ce moment là que nous relevont la BET. (environ P/P0 = 0,3)',
     },
     {
       title: '3. Multicouche',
-      text: 'D’autres molécules s’empilent sur la première couche, toujours à l’intérieur du pore.',
+      text: 'À mesure que l’adsorption progresse, les molécules d’azote s’empilent et forment plusieurs couches sur la surface du matériau.',
     },
     {
       title: '4. Condensation capillaire',
-      text: 'Dans les mésopores, le centre du pore finit par se remplir : un ménisque apparaît.',
+      text: 'À l’approche de la pression de saturation, l’azote commence à se condenser dans les pores. La porosité accessible se remplit progressivement jusqu’à permettre l’estimation du volume poreux total. (environ P/P₀ = 0,995)',
     },
   ]
 
@@ -461,11 +433,10 @@ function AdsorptionSequence() {
           </div>
 
           <div className="seqCondensed" />
-          <div className="seqMeniscus" />
         </div>
 
         <div className="seqCaption">
-          Micropore → monocouche → multicouche → condensation dans un mésopore
+          Micropore → monocouche → multicouche → condensation de l'azote
         </div>
       </div>
     </div>
