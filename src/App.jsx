@@ -670,11 +670,77 @@ function DeterminationsPage() {
           title="Que peut-on déterminer avec une isotherme d’adsorption ?"
         >
           <p>
-            L’adsorption d’azote permet d’estimer la surface BET, le volume poreux total
-            et d’interpréter la forme de l’isotherme.
+            L’adsorption d’azote ne sert pas seulement à mesurer la surface BET.
+            La forme complète de l’isotherme permet aussi d’estimer le volume poreux
+            et de comprendre le comportement poreux du matériau.
           </p>
         </TextCard>
+
+        <div className="determinationGrid">
+          <DeterminationCard
+            title="Surface BET"
+            text="La zone linéaire de l’isotherme permet d’estimer la surface spécifique."
+            highlight="Zone BET : environ P/P₀ = 0,05 à 0,30"
+            type="bet"
+          />
+
+          <DeterminationCard
+            title="Volume poreux total"
+            text="À très forte pression relative, la quantité adsorbée permet d’estimer le volume poreux total."
+            highlight="Lecture proche de P/P₀ = 0,99"
+            type="volume"
+          />
+
+          <DeterminationCard
+            title="Forme de l’isotherme"
+            text="La forme globale de la courbe renseigne sur la nature de la porosité et l’hystérèse."
+            highlight="Adsorption et désorption"
+            type="isotherm"
+          />
+        </div>
       </section>
     </main>
+  )
+}
+
+function DeterminationCard({ title, text, highlight, type }) {
+  return (
+    <div className="determinationCard">
+      <AnimatedGraph type={type} />
+
+      <h3>{title}</h3>
+      <p>{text}</p>
+      <span>{highlight}</span>
+    </div>
+  )
+}
+
+function AnimatedGraph({ type }) {
+  return (
+    <svg className={`animatedGraph ${type}`} viewBox="0 0 320 220">
+      <line x1="38" y1="185" x2="292" y2="185" />
+      <line x1="38" y1="185" x2="38" y2="28" />
+
+      <path
+        className="graphLine adsorption"
+        d="M40 182 C70 120, 105 105, 140 103 C190 102, 205 92, 220 55 C235 20, 260 30, 290 30"
+      />
+
+      <path
+        className="graphLine desorption"
+        d="M290 30 C272 42, 258 60, 238 88 C215 118, 188 104, 142 104 C108 106, 72 122, 40 182"
+      />
+
+      {type === 'bet' && (
+        <path
+          className="graphBetZone"
+          d="M76 122 C98 108, 116 104, 140 103"
+        />
+      )}
+
+      {type === 'volume' && (
+        <circle className="graphPoint" cx="288" cy="31" r="8" />
+      )}
+    </svg>
   )
 }

@@ -1734,3 +1734,139 @@ body,
   border-color: rgba(147, 197, 253, 0.55);
   transform: translateY(-2px);
 }
+
+.backButton {
+  position: fixed;
+  z-index: 120;
+  top: 18px;
+  left: 24px;
+
+  padding: 10px 16px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,0.14);
+  background: rgba(2,6,23,0.72);
+  color: #dbeafe;
+  text-decoration: none;
+  font-weight: 800;
+  backdrop-filter: blur(18px);
+}
+
+.determinationGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 28px;
+  margin-top: 42px;
+}
+
+.determinationCard {
+  min-height: 520px;
+  padding: 28px;
+  border-radius: 32px;
+  border: 1px solid rgba(255,255,255,0.14);
+  background:
+    radial-gradient(circle at 50% 20%, rgba(96,165,250,0.16), transparent 34%),
+    linear-gradient(180deg, rgba(2,6,23,0.24), rgba(15,23,42,0.78));
+  box-shadow: 0 30px 90px rgba(0,0,0,0.32);
+}
+
+.determinationCard h3 {
+  margin-top: 24px;
+  font-size: clamp(28px, 3vw, 44px);
+  line-height: 1;
+  letter-spacing: -0.05em;
+}
+
+.determinationCard p {
+  color: #cbd5e1;
+  line-height: 1.7;
+}
+
+.determinationCard span {
+  display: inline-flex;
+  margin-top: 18px;
+  padding: 9px 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(96,165,250,0.35);
+  background: rgba(96,165,250,0.16);
+  color: #dbeafe;
+  font-weight: 800;
+}
+
+.animatedGraph {
+  width: 100%;
+  height: 220px;
+  overflow: visible;
+}
+
+.animatedGraph line {
+  stroke: rgba(226,232,240,0.65);
+  stroke-width: 3;
+  stroke-linecap: round;
+}
+
+.graphLine {
+  fill: none;
+  stroke-width: 5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 420;
+  stroke-dashoffset: 420;
+}
+
+.graphLine.adsorption {
+  stroke: #60a5fa;
+  animation: drawAdsorption 5.5s ease-in-out infinite;
+}
+
+.graphLine.desorption {
+  stroke: #facc15;
+  animation: drawDesorption 5.5s ease-in-out infinite;
+}
+
+.graphBetZone {
+  fill: none;
+  stroke: #fde047;
+  stroke-width: 8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 120;
+  stroke-dashoffset: 120;
+  animation: drawBetZone 5.5s ease-in-out infinite;
+}
+
+.graphPoint {
+  fill: #fde047;
+  filter: drop-shadow(0 0 12px rgba(250,204,21,0.8));
+  opacity: 0;
+  animation: showGraphPoint 5.5s ease-in-out infinite;
+}
+
+@keyframes drawAdsorption {
+  0% { stroke-dashoffset: 420; opacity: 0; }
+  10% { opacity: 1; }
+  42% { stroke-dashoffset: 0; opacity: 1; }
+  92% { stroke-dashoffset: 0; opacity: 1; }
+  100% { stroke-dashoffset: 420; opacity: 0; }
+}
+
+@keyframes drawDesorption {
+  0%, 42% { stroke-dashoffset: 420; opacity: 0; }
+  50% { opacity: 1; }
+  78% { stroke-dashoffset: 0; opacity: 1; }
+  92% { stroke-dashoffset: 0; opacity: 1; }
+  100% { stroke-dashoffset: 420; opacity: 0; }
+}
+
+@keyframes drawBetZone {
+  0%, 42% { stroke-dashoffset: 120; opacity: 0; }
+  50% { opacity: 1; }
+  66% { stroke-dashoffset: 0; opacity: 1; }
+  92% { stroke-dashoffset: 0; opacity: 1; }
+  100% { stroke-dashoffset: 120; opacity: 0; }
+}
+
+@keyframes showGraphPoint {
+  0%, 38% { opacity: 0; transform: scale(0.7); }
+  46%, 88% { opacity: 1; transform: scale(1); }
+  100% { opacity: 0; transform: scale(0.7); }
+}
