@@ -1,8 +1,9 @@
+import { Routes, Route, Link } from 'react-router-dom'
 import { useEffect, useMemo, useState } from 'react'
 import { motion } from 'framer-motion'
 import './App.css'
 
-function App() {
+function HomePage() {
   useEffect(() => {
     if ('scrollRestoration' in history) {
       history.scrollRestoration = 'manual'
@@ -101,7 +102,7 @@ function App() {
       <section id="conclusion" className="section twoCols">
   <TextCard
     badge="5. Conclusion"
-    title="La BET transforme une adsorption invisible en surface mesurable."
+    title="L’adsorption d’azote révèle la surface cachée des matériaux."
   >
     <p>
       Toute la mesure BET consiste à estimer combien de surface est accessible aux molécules d’azote.
@@ -109,11 +110,24 @@ function App() {
     <p>
       Plus les molécules peuvent accéder à des parois internes, plus la surface spécifique calculée est élevée.
     </p>
+
+    <Link className="nextPageButton" to="/determinations">
+  Explorer les autres analyses à l’azote
+</Link>
   </TextCard>
 
   <BETConclusion />
 </section>
     </main>
+  )
+}
+
+function App() {
+  return (
+    <Routes>
+      <Route path="/" element={<HomePage />} />
+      <Route path="/determinations" element={<DeterminationsPage />} />
+    </Routes>
   )
 }
 
@@ -294,15 +308,20 @@ function PoreType({ name, size, type, text }) {
 }
 
 function PP0Simulator() {
-  const [value, setValue] = useState(8)
+  const [value, setValue] = useState(0)
   const p = value / 100
 
   const microFill = clamp(p / 0.10, 0, 1) * 100
   const mesoFill = clamp((p - 0.11) / 0.70, 0, 1) * 100
   const macroFill = clamp((p - 0.75) / 0.30, 0, 1) * 60
 
-  let state = 'Micropores'
-  let explanation = 'À très faible P/P₀, les micropores commencent déjà à se remplir.'
+  let state = 'Pression nulle'
+  let explanation = 'Aucune molécule d’azote n’est adsorbée. La surface du matériau est libre.'
+
+  if (p >= 0.01 && p < 0.11) {
+    state = 'Micropores'
+    explanation = 'À très faible P/P₀, les micropores commencent déjà à se remplir.'
+  }
 
   if (p >= 0.11 && p < 0.55) {
     state = 'Adsorption progressive'
@@ -558,9 +577,9 @@ function BETConclusion() {
       text: 'L’azote atteint beaucoup plus de parois.',
     },
     {
-      label: 'Microporeux',
+      label: 'Énormément poreux',
       value: 500,
-      text: 'La surface accessible devient très élevée.',
+      text: 'La surface accessible devient immense.',
     },
   ]
 
@@ -635,3 +654,27 @@ function clamp(value, min, max) {
 }
 
 export default App
+
+function DeterminationsPage() {
+  return (
+    <main className="page">
+      <GlobalNitrogen />
+
+      <Link className="backButton" to="/">
+        ← Retour
+      </Link>
+
+      <section className="section">
+        <TextCard
+          badge="Analyses à l’azote"
+          title="Que peut-on déterminer avec une isotherme d’adsorption ?"
+        >
+          <p>
+            L’adsorption d’azote permet d’estimer la surface BET, le volume poreux total
+            et d’interpréter la forme de l’isotherme.
+          </p>
+        </TextCard>
+      </section>
+    </main>
+  )
+}
