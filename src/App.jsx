@@ -1,7 +1,17 @@
-import { Routes, Route, Link } from 'react-router-dom'
+import { Routes, Route, Link, useLocation } from 'react-router-dom'
 import { useEffect, useMemo, useState } from 'react'
 import { motion } from 'framer-motion'
 import './App.css'
+
+function ScrollToTop() {
+  const { pathname } = useLocation()
+
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [pathname])
+
+  return null
+}
 
 function HomePage() {
   useEffect(() => {
@@ -124,10 +134,14 @@ function HomePage() {
 
 function App() {
   return (
-    <Routes>
-      <Route path="/" element={<HomePage />} />
-      <Route path="/determinations" element={<DeterminationsPage />} />
-    </Routes>
+    <>
+      <ScrollToTop />
+
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/determinations" element={<DeterminationsPage />} />
+      </Routes>
+    </>
   )
 }
 
@@ -697,6 +711,12 @@ function DeterminationsPage() {
             highlight="Adsorption et désorption"
             type="isotherm"
           />
+          <DeterminationCard
+            title="Microporosité"
+            text="La microporosité s’observe à très faible P/P₀. Une forte adsorption dès les basses pressions indique la présence de pores très étroits."
+            highlight="Zone micropore : très faibles P/P₀"
+            type="micro"
+          />
         </div>
       </section>
     </main>
@@ -716,6 +736,16 @@ function DeterminationCard({ title, text, highlight, type }) {
 }
 
 function AnimatedGraph({ type }) {
+  const adsorptionPath =
+    type === 'micro'
+      ? 'M40 182 C48 78, 74 104, 120 103 C170 103, 205 102, 222 58 C238 24, 262 31, 290 30'
+      : 'M40 182 C70 120, 105 105, 140 103 C190 102, 205 92, 220 55 C235 20, 260 30, 290 30'
+
+  const desorptionPath =
+    type === 'micro'
+      ? 'M290 30 C270 42, 252 66, 232 92 C210 120, 172 106, 120 104'
+      : 'M290 30 C272 42, 258 60, 238 88 C215 118, 188 104, 142 104'
+
   return (
     <svg className={`animatedGraph ${type}`} viewBox="0 0 320 220">
       <line x1="38" y1="185" x2="292" y2="185" />
@@ -723,18 +753,25 @@ function AnimatedGraph({ type }) {
 
       <path
         className="graphLine adsorption"
-        d="M40 182 C70 120, 105 105, 140 103 C190 102, 205 92, 220 55 C235 20, 260 30, 290 30"
+        d={adsorptionPath}
       />
 
       <path
         className="graphLine desorption"
-        d="M290 30 C272 42, 258 60, 238 88 C215 118, 188 104, 142 104 C108 106, 72 122, 40 182"
+        d={desorptionPath}
       />
 
       {type === 'bet' && (
         <path
           className="graphBetZone"
           d="M76 122 C98 108, 116 104, 140 103"
+        />
+      )}
+
+      {type === 'micro' && (
+        <path
+          className="graphMicroZone"
+          d="M42 180 C48 92, 72 104, 108 103"
         />
       )}
 
