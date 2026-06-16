@@ -1893,3 +1893,19 @@ body,
 .lead {
   color: #f8fafc !important;
 }
+
+/* Chrome, Edge, Safari */
+::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+}
+
+/* Firefox */
+html {
+  scrollbar-width: none;
+}
+
+/* IE */
+body {
+  -ms-overflow-style: none;
+}
