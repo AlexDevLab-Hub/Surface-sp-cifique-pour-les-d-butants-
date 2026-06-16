@@ -1813,14 +1813,20 @@ body,
   stroke-dashoffset: 420;
 }
 
-.graphLine.adsorption {
+.curveBlue {
   stroke: #60a5fa;
-  animation: drawAdsorption 5.8s ease-in-out infinite;
 }
 
-.graphLine.desorption {
+.isothermYellow {
   stroke: #facc15;
-  animation: drawDesorption 5.8s ease-in-out infinite;
+}
+
+.graphAdsorption {
+  animation: graphAdsorptionCycle 7s linear infinite;
+}
+
+.graphDesorption {
+  animation: graphDesorptionCycle 7s linear infinite;
 }
 
 .graphBetZone,
@@ -1832,38 +1838,40 @@ body,
   stroke-linejoin: round;
   stroke-dasharray: 120;
   stroke-dashoffset: 120;
-  animation: drawHighlightZone 5.8s ease-in-out infinite;
-}
-
-.graphMicroZone {
-  stroke-width: 9;
+  opacity: 0;
+  animation: graphHighlightCycle 7s linear infinite;
 }
 
 .graphPoint {
   fill: #fde047;
   filter: drop-shadow(0 0 12px rgba(250,204,21,0.8));
   opacity: 0;
-  animation: showGraphPoint 5.8s ease-in-out infinite;
+  transform-origin: center;
+  animation: graphPointCycle 7s linear infinite;
 }
 
-@keyframes drawAdsorption {
+@keyframes graphAdsorptionCycle {
   0% {
     stroke-dashoffset: 420;
     opacity: 0;
   }
 
-  8% {
+  5% {
     opacity: 1;
   }
 
-  42% {
+  35% {
     stroke-dashoffset: 0;
     opacity: 1;
   }
 
-  92% {
+  85% {
     stroke-dashoffset: 0;
     opacity: 1;
+  }
+
+  86% {
+    opacity: 0;
   }
 
   100% {
@@ -1872,24 +1880,29 @@ body,
   }
 }
 
-@keyframes drawDesorption {
-  0%, 46% {
+@keyframes graphDesorptionCycle {
+  0%,
+  35% {
     stroke-dashoffset: 420;
     opacity: 0;
   }
 
-  52% {
+  40% {
     opacity: 1;
   }
 
-  76% {
+  62% {
     stroke-dashoffset: 0;
     opacity: 1;
   }
 
-  92% {
+  85% {
     stroke-dashoffset: 0;
     opacity: 1;
+  }
+
+  86% {
+    opacity: 0;
   }
 
   100% {
@@ -1898,24 +1911,25 @@ body,
   }
 }
 
-@keyframes drawHighlightZone {
-  0%, 42% {
+@keyframes graphHighlightCycle {
+  0%,
+  62% {
     stroke-dashoffset: 120;
     opacity: 0;
   }
 
-  50% {
-    opacity: 1;
-  }
-
-  66% {
+  67% {
     stroke-dashoffset: 0;
     opacity: 1;
   }
 
-  92% {
+  85% {
     stroke-dashoffset: 0;
     opacity: 1;
+  }
+
+  86% {
+    opacity: 0;
   }
 
   100% {
@@ -1924,15 +1938,25 @@ body,
   }
 }
 
-@keyframes showGraphPoint {
-  0%, 36% {
+@keyframes graphPointCycle {
+  0%,
+  62% {
     opacity: 0;
     transform: scale(0.7);
   }
 
-  44%, 88% {
+  67% {
     opacity: 1;
     transform: scale(1);
+  }
+
+  85% {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  86% {
+    opacity: 0;
   }
 
   100% {

@@ -736,30 +736,34 @@ function DeterminationCard({ title, text, highlight, type }) {
 }
 
 function AnimatedGraph({ type }) {
-  const adsorptionPath =
-    type === 'micro'
-      ? 'M40 182 C48 78, 74 104, 120 103 C170 103, 205 102, 222 58 C238 24, 262 31, 290 30'
-      : 'M40 182 C70 120, 105 105, 140 103 C190 102, 205 92, 220 55 C235 20, 260 30, 290 30'
+const adsorptionPath =
+  type === 'micro'
+    ? 'M40 182 C46 84, 72 108, 118 108 C170 108, 210 108, 226 72 C242 38, 266 36, 290 34'
+    : 'M40 182 C70 126, 104 112, 142 112 C180 112, 214 98, 236 70 C258 42, 274 34, 290 34'
 
-  const desorptionPath =
-    type === 'micro'
-      ? 'M290 30 C270 42, 252 66, 232 92 C210 120, 172 106, 120 104'
-      : 'M290 30 C272 42, 258 60, 238 88 C215 118, 188 104, 142 104'
+const desorptionPath =
+  type === 'micro'
+    ? 'M290 34 C260 34, 238 34, 220 44 C198 58, 190 86, 168 104 C150 116, 132 112, 118 108'
+    : 'M290 34 C258 34, 230 34, 210 44 C188 58, 182 92, 160 108 C148 116, 136 114, 142 112'
 
   return (
     <svg className={`animatedGraph ${type}`} viewBox="0 0 320 220">
       <line x1="38" y1="185" x2="292" y2="185" />
       <line x1="38" y1="185" x2="38" y2="28" />
 
-      <path
-        className="graphLine adsorption"
-        d={adsorptionPath}
-      />
+<path
+  className={`graphLine graphAdsorption ${
+    type === 'isotherm' ? 'isothermYellow' : 'curveBlue'
+  }`}
+  d={adsorptionPath}
+/>
 
-      <path
-        className="graphLine desorption"
-        d={desorptionPath}
-      />
+<path
+  className={`graphLine graphDesorption ${
+    type === 'isotherm' ? 'isothermYellow' : 'curveBlue'
+  }`}
+  d={desorptionPath}
+/>
 
       {type === 'bet' && (
         <path
