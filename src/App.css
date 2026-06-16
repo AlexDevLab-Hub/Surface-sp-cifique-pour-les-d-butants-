@@ -1870,3 +1870,26 @@ body,
   46%, 88% { opacity: 1; transform: scale(1); }
   100% { opacity: 0; transform: scale(0.7); }
 }
+
+body,
+.page,
+.section,
+.textCard,
+.textCard p,
+.textCard h1,
+.textCard h2,
+.textCard h3,
+.heroText,
+.heroText h1,
+.heroText p,
+.determinationCard,
+.determinationCard h3,
+.determinationCard p,
+.betCounter,
+.betCounter p,
+.betCounter span,
+.badge,
+.state,
+.lead {
+  color: #f8fafc !important;
+}
