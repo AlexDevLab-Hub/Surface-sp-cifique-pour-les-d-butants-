@@ -228,7 +228,6 @@ function TextCard({ badge, title, children }) {
       viewport={{ once: false, amount: 0.35 }}
       transition={{ duration: 0.65 }}
     >
-      <p className="badge">{badge}</p>
       <h2>{title}</h2>
       <div>{children}</div>
     </motion.div>
@@ -680,13 +679,12 @@ function DeterminationsPage() {
 
       <section className="section">
         <TextCard
-          badge="Analyses à l’azote"
-          title="Que peut-on déterminer avec une isotherme d’adsorption ?"
+          title="Que peut-on déterminer avec une analyse d'adsorption à l'azote ?"
         >
           <p>
-            L’adsorption d’azote ne sert pas seulement à mesurer la surface BET.
-            La forme complète de l’isotherme permet aussi d’estimer le volume poreux
-            et de comprendre le comportement poreux du matériau.
+              L’adsorption d’azote ne sert pas uniquement à mesurer la surface spécifique BET.
+              Différentes zones de l’isotherme permettent également d’obtenir des informations
+              complémentaires sur la porosité du matériau analysé.
           </p>
         </TextCard>
 
