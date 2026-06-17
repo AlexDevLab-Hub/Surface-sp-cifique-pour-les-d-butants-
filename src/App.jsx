@@ -724,9 +724,21 @@ function DeterminationsPage() {
 }
 
 function DeterminationCard({ title, text, highlight, type }) {
+  const [paused, setPaused] = useState(false)
+
   return (
     <div className="determinationCard">
-      <AnimatedGraph type={type} />
+      <button
+        className="graphPauseButton"
+        onClick={() => setPaused(!paused)}
+        aria-label={paused ? 'Reprendre animation' : 'Mettre en pause'}
+      >
+        {paused ? '▶' : '⏸'}
+      </button>
+
+      <div className={paused ? 'graphPaused' : ''}>
+        <AnimatedGraph type={type} />
+      </div>
 
       <h3>{title}</h3>
       <p>{text}</p>
@@ -737,13 +749,13 @@ function DeterminationCard({ title, text, highlight, type }) {
 
 function AnimatedGraph({ type }) {
 const adsorptionPath =
-  type === 'micro'
-    ? 'M40 182 C46 84, 72 108, 118 108 C170 108, 210 108, 226 72 C242 38, 266 36, 290 34'
+type === 'micro'
+    ? 'M40 182 C40 120, 42 110, 55 108 C75 108, 95 108, 118 108 C170 108, 210 108, 226 72 C242 38, 266 36, 290 34'
     : 'M40 182 C70 126, 104 112, 142 112 C180 112, 214 98, 236 70 C258 42, 274 34, 290 34'
 
 const desorptionPath =
   type === 'micro'
-    ? 'M290 34 C250 34, 232 36, 220 44 C198 58, 190 86, 168 104 C150 116, 132 112, 118 100'
+    ? 'M290 34 C248 34, 228 36, 212 44 C190 58, 184 92, 160 108'
     : 'M290 34 C245 34, 225 36, 210 44 C188 58, 182 92, 160 110'
 
   return (
@@ -752,36 +764,59 @@ const desorptionPath =
       <line x1="38" y1="185" x2="38" y2="28" />
 
 <path
-  className={`graphLine graphAdsorption ${
-    type === 'isotherm' ? 'isothermYellow' : 'curveBlue'
-  }`}
+  className="graphLine graphAdsorption curveBlue"
   d={adsorptionPath}
 />
 
 <path
-  className={`graphLine graphDesorption ${
-    type === 'isotherm' ? 'isothermYellow' : 'curveBlue'
-  }`}
+  className="graphLine graphDesorption curveBlue"
   d={desorptionPath}
 />
+{type === 'isotherm' && (
+  <>
+    <path
+      className="graphIsoReplay graphIsoAdsorption"
+      d={adsorptionPath}
+    />
 
+    <path
+      className="graphIsoReplay graphIsoDesorption"
+      d={desorptionPath}
+    />
+  </>
+)}
       {type === 'bet' && (
-        <path
-          className="graphBetZone"
-          d="M76 122 C98 108, 116 104, 140 103"
-        />
-      )}
+  <path
+    className="graphBetZone"
+    d="M62 142 C82 124, 106 114, 142 112"
+  />
+)}
 
       {type === 'micro' && (
-        <path
-          className="graphMicroZone"
-          d="M42 180 C48 92, 72 104, 108 103"
-        />
-      )}
+  <path
+    className="graphMicroZone"
+    d="M40 182 C40 122, 42 112, 50 108"
+  />
+)}
 
       {type === 'volume' && (
         <circle className="graphPoint" cx="288" cy="31" r="8" />
       )}
+<text
+  x="160"
+  y="203"
+  className="graphAxisLabel"
+>
+  P/P₀
+</text>
+
+<text
+  x="-30"
+  y="108"
+  className="graphAxisLabel graphAxisLabelY"
+>
+  Quantité adsorbée
+</text>
     </svg>
   )
 }

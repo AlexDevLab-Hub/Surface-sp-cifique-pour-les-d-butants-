@@ -1759,6 +1759,7 @@ body,
 }
 
 .determinationCard {
+  position: relative;
   min-height: auto;
   padding: 32px;
   border-radius: 32px;
@@ -1790,6 +1791,46 @@ body,
   background: rgba(96,165,250,0.16);
   color: #dbeafe;
   font-weight: 800;
+}
+
+.graphPauseButton {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  z-index: 5;
+
+  padding: 8px 14px;
+
+  border-radius: 999px;
+  border: 1px solid rgba(96,165,250,0.22);
+
+  background: rgba(2,6,23,0.58);
+  backdrop-filter: blur(18px);
+
+  color: #dbeafe;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+
+  cursor: pointer;
+
+  transition:
+    transform 0.2s ease,
+    border-color 0.2s ease,
+    background 0.2s ease;
+}
+
+.graphPauseButton:hover {
+  transform: translateY(-1px);
+  background: rgba(96,165,250,0.12);
+  border-color: rgba(147,197,253,0.35);
+}
+
+.graphPaused .graphLine,
+.graphPaused .graphBetZone,
+.graphPaused .graphMicroZone,
+.graphPaused .graphPoint {
+  animation-play-state: paused !important;
 }
 
 .animatedGraph {
@@ -1918,12 +1959,16 @@ body,
 
 @keyframes graphHighlightCycle {
   0%,
-  62% {
+  50% {
     stroke-dashoffset: 120;
     opacity: 0;
   }
 
-  67% {
+  61% {
+    opacity: 1;
+  }
+
+  66% {
     stroke-dashoffset: 0;
     opacity: 1;
   }
@@ -1945,12 +1990,12 @@ body,
 
 @keyframes graphPointCycle {
   0%,
-  62% {
+  50% {
     opacity: 0;
     transform: scale(0.7);
   }
 
-  67% {
+  61% {
     opacity: 1;
     transform: scale(1);
   }
@@ -2013,4 +2058,99 @@ body {
 .graphAdsorption,
 .graphDesorption {
   stroke-linecap: butt !important;
+}
+
+.graphIsoReplay {
+  fill: none;
+  stroke: #facc15;
+  stroke-width: 7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 420;
+  stroke-dashoffset: 420;
+  opacity: 0;
+}
+
+.graphIsoAdsorption {
+  animation: graphIsoAdsorptionReplay 7s linear infinite;
+}
+
+.graphIsoDesorption {
+  animation: graphIsoDesorptionReplay 7s linear infinite;
+}
+
+@keyframes graphIsoAdsorptionReplay {
+  0%,
+  58% {
+    stroke-dashoffset: 420;
+    opacity: 0;
+  }
+
+  61% {
+    opacity: 1;
+  }
+
+  68% {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+
+  85% {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+
+  86% {
+    opacity: 0;
+  }
+
+  100% {
+    stroke-dashoffset: 420;
+    opacity: 0;
+  }
+}
+
+@keyframes graphIsoDesorptionReplay {
+  0%,
+  68% {
+    stroke-dashoffset: 420;
+    opacity: 0;
+  }
+
+  70% {
+    opacity: 1;
+  }
+
+  76% {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+
+  85% {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+
+  86% {
+    opacity: 0;
+  }
+
+  100% {
+    stroke-dashoffset: 420;
+    opacity: 0;
+  }
+}
+
+.graphAxisLabel {
+  fill: rgba(226,232,240,0.38);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  user-select: none;
+}
+
+.graphAxisLabelY {
+  transform-box: fill-box;
+  transform-origin: center;
+  transform: rotate(-90deg);
 }
