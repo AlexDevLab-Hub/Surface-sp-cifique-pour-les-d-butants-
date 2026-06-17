@@ -691,28 +691,28 @@ function DeterminationsPage() {
         <div className="determinationGrid">
           <DeterminationCard
             title="Surface BET"
-            text="La zone linéaire de l’isotherme permet d’estimer la surface spécifique."
+            text="Dans cette zone de l’isotherme, les molécules d’azote recouvrent progressivement la surface du matériau sous forme de monocouche. L’analyse de cinq points de mesure permet alors de calculer la surface spécifique BET."
             highlight="Zone BET : environ P/P₀ = 0,05 à 0,30"
             type="bet"
           />
 
           <DeterminationCard
             title="Volume poreux total"
-            text="À très forte pression relative, la quantité adsorbée permet d’estimer le volume poreux total."
-            highlight="Lecture proche de P/P₀ = 0,99"
+            text="Lorsque P/P0 s'approche de 1, l’azote remplit progressivement l’ensemble de la porosité. La quantité totale de gaz adsorbée permet alors d’estimer le volume poreux total du matériau."
+            highlight="Lecture proche de P/P₀ = 1"
             type="volume"
           />
 
           <DeterminationCard
-            title="Forme de l’isotherme"
-            text="La forme globale de la courbe renseigne sur la nature de la porosité et l’hystérèse."
+            title="Isotherme"
+            text="Au-delà de la surface spécifique BET et du volume poreux total, l’analyse de l’isotherme complet apporte des informations précieuses, notamment sur la répartition de la porosité, la taille et la forme des pores."
             highlight="Adsorption et désorption"
             type="isotherm"
           />
           <DeterminationCard
-            title="Microporosité"
-            text="La microporosité s’observe à très faible P/P₀. Une forte adsorption dès les basses pressions indique la présence de pores très étroits."
-            highlight="Zone micropore : très faibles P/P₀"
+            title="Micropore"
+            text="La microporosité s’observe à très faible P/P₀. Une forte adsorption dès les basses pressions indique la présence de pores très étroits. Sa mesure requiert une excellente précision de mesure et peut considérablement allonger la durée de l’analyse."
+            highlight="Zone micropore : P/P0 < 0,1"
             type="micro"
           />
         </div>
@@ -741,6 +741,13 @@ function DeterminationCard({ title, text, highlight, type }) {
       <h3>{title}</h3>
       <p>{text}</p>
       <span>{highlight}</span>
+      {type === 'micro' && (
+  <div className="equipmentButtonWrapper">
+    <a className="nextPageButton" href="/equipements">
+      Découvrez nos appareils de mesure et nos équipements
+    </a>
+  </div>
+)}
     </div>
   )
 }

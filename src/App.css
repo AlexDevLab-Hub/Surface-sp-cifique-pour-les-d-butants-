@@ -1445,8 +1445,9 @@ body,
 
 .globalNitrogen {
   position: absolute;
-  inset: 0;
-  width: 100%;
+  top: 0;
+  left: -15vw;
+  width: 130vw;
   height: 100%;
   pointer-events: none;
   overflow: visible;
@@ -1704,35 +1705,19 @@ body,
 }
 
 .nextPageButton {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-
-  margin-top: 28px;
-  padding: 12px 18px;
-
-  width: fit-content;
-
+  padding: 12px 22px;
   border-radius: 999px;
-  border: 1px solid rgba(96, 165, 250, 0.32);
-
-  background: rgba(96, 165, 250, 0.12);
+  border: 1px solid rgba(96,165,250,0.35);
+  background: rgba(96,165,250,0.14);
   color: #dbeafe;
-
-  font-weight: 800;
-  font-size: 14px;
   text-decoration: none;
-
-  transition:
-    background 0.25s ease,
-    border-color 0.25s ease,
-    transform 0.25s ease;
+  font-weight: 700;
+  transition: all 0.25s ease;
 }
 
 .nextPageButton:hover {
-  background: rgba(96, 165, 250, 0.2);
-  border-color: rgba(147, 197, 253, 0.55);
   transform: translateY(-2px);
+  background: rgba(96,165,250,0.22);
 }
 
 .backButton {
@@ -2153,4 +2138,17 @@ body {
   transform-box: fill-box;
   transform-origin: center;
   transform: rotate(-90deg);
+}
+
+.textCard h2 {
+  font-size: clamp(38px, 4vw, 56px);
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  margin-bottom: 18px;
+}
+
+.equipmentButtonWrapper {
+  display: flex;
+  justify-content: center;
+  margin-top: 22px;
 }
