@@ -140,6 +140,7 @@ function App() {
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/determinations" element={<DeterminationsPage />} />
+        <Route path="/equipements" element={<EquipementsPage />} />
       </Routes>
     </>
   )
@@ -666,6 +667,147 @@ function clamp(value, min, max) {
   return Math.max(min, Math.min(max, value))
 }
 
+function EquipementsPage() {
+  return (
+    <main className="page">
+      <GlobalNitrogen />
+
+      <Link className="backButton" to="/determinations">
+        ← Retour
+      </Link>
+
+      <section className="section">
+        <TextCard
+          title="Des équipements adaptés à chaque niveau de caractérisation."
+        >
+          <p>
+            Chaque analyse d’adsorption d’azote nécessite un équipement adapté à la précision recherchée.
+            Notre laboratoire dispose de plusieurs instruments complémentaires permettant de réaliser des mesures de surface spécifique,
+            de volume poreux total et de microporosité.
+          </p>
+        </TextCard>
+
+        <div className="pageBadge">
+          Nos appareils de mesure
+        </div>
+
+        <div className="equipmentCompareCard">
+  <div className="pressureScale">
+    <span>P/P₀ = 0</span>
+    <div />
+    <span>P/P₀ = 1</span>
+  </div>
+
+  <div className="deviceScale">
+    <DeviceRange
+      name="ASAP 2420"
+      className="asap2420"
+      text="Surface BET, analyses de routine et mesures rapides."
+    />
+
+    <DeviceRange
+      name="ASAP 2425"
+      className="asap2425"
+      text="Surface BET, volume poreux total et caractérisation poreuse avancée."
+    />
+
+    <DeviceRange
+      name="3Flex"
+      className="threeFlex"
+      text="Microporosité, très faibles pressions relatives et analyses de haute précision."
+    />
+  </div>
+
+  <p className="deviceHint">
+    Survolez un appareil pour afficher ses caractéristiques
+  </p>
+</div>
+
+        <div className="pageBadge">
+          Contrôle qualité
+        </div>
+
+        <div className="qualityCard determinationCard">
+          <p>
+            Les performances de nos instruments sont régulièrement contrôlées à l’aide de références certifiées Micromeritics afin de garantir la justesse et la reproductibilité des résultats.
+          </p>
+          <div className="qualityComet" aria-hidden="true">
+  <span className="qSpark core" />
+  <span className="qSpark trail t1" />
+  <span className="qSpark trail t2" />
+  <span className="qSpark trail t3" />
+  <span className="qSpark trail t4" />
+</div>
+        </div>
+
+        <div className="pageBadge">
+          Nos équipements
+        </div>
+
+        <div className="equipmentGrid">
+          <EquipmentItem
+            title="Smart VacPrep"
+            text="Préparation et dégazage automatisés des échantillons avant analyse."
+          />
+
+          <EquipmentItem
+            title="Pompe à vide hydraulique"
+            text="Production du vide primaire utilisé lors des opérations de préparation et de dégazage."
+          />
+
+          <EquipmentItem
+            title="Pompe à vide à membrane"
+            text="Production d’un vide propre et sans huile pour les opérations de préparation."
+          />
+
+          <EquipmentItem
+            title="Pompe à vide turbomoléculaire"
+            text="Obtention d’un vide poussé indispensable aux analyses de haute précision."
+          />
+
+          <EquipmentItem
+            title="Balance de précision 0,0001 g"
+            text="Pesée précise des échantillons afin de garantir la fiabilité des résultats."
+          />
+
+          <EquipmentItem
+            title="Unité antistatique"
+            text="Réduction des charges électrostatiques susceptibles d’influencer les opérations de pesée."
+          />
+        </div>
+      </section>
+    </main>
+  )
+}
+
+function DeviceRange({ name, className, text }) {
+  return (
+    <div className={`deviceFlip device-${className}`}>
+      <div className="deviceFlipInner">
+        <div className="deviceFlipFace deviceFlipFront">
+          <div className={`deviceBar ${className}`}>
+            <span>{name}</span>
+          </div>
+        </div>
+
+        <div className="deviceFlipFace deviceFlipBack">
+          <strong>{name}</strong>
+          <p>{text}</p>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function EquipmentItem({ title, text }) {
+  return (
+    <div className="equipmentItem">
+      <h3>{title}</h3>
+      <p>{text}</p>
+    </div>
+  )
+}
+
 export default App
 
 function DeterminationsPage() {
@@ -742,10 +884,10 @@ function DeterminationCard({ title, text, highlight, type }) {
       <p>{text}</p>
       <span>{highlight}</span>
       {type === 'micro' && (
-  <div className="equipmentButtonWrapper">
-    <a className="nextPageButton" href="/equipements">
-      Découvrez nos appareils de mesure et nos équipements
-    </a>
+      <div className="equipmentButtonWrapper">
+      <Link className="nextPageButton" to="/equipements">
+      Découvrez nos appareils de mesure et équipements
+    </Link>
   </div>
 )}
     </div>
