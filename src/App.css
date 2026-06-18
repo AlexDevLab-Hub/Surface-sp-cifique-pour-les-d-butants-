@@ -2235,7 +2235,31 @@ body {
   gap: 22px;
 }
 
-.equipmentItem {
+.equipmentFlip {
+  min-height: 150px;
+  perspective: 1200px;
+}
+
+.equipmentFlipInner {
+  position: relative;
+  height: 100%;
+  min-height: 150px;
+  transform-style: preserve-3d;
+  transition: transform 0.7s ease;
+}
+
+.equipmentFlip:hover .equipmentFlipInner {
+  transform: rotateX(180deg);
+}
+
+.equipmentFlipFace {
+  position: absolute;
+  inset: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
   padding: 26px;
   border-radius: 26px;
   border: 1px solid rgba(255,255,255,0.12);
@@ -2245,16 +2269,25 @@ body {
     rgba(2,6,23,0.48);
 
   box-shadow: 0 20px 60px rgba(0,0,0,0.24);
+
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+
+  text-align: center;
 }
 
-.equipmentItem h3 {
-  margin: 0 0 10px;
+.equipmentFlipFront h3 {
+  margin: 0;
   color: #f8fafc;
   font-size: 24px;
   letter-spacing: -0.04em;
 }
 
-.equipmentItem p {
+.equipmentFlipBack {
+  transform: rotateX(180deg);
+}
+
+.equipmentFlipBack p {
   margin: 0;
   color: #cbd5e1;
   line-height: 1.65;
@@ -2430,7 +2463,7 @@ body {
   offset-path: inset(-3px round 34px);
   offset-rotate: 0deg;
 
-  animation: qualityCometOrbit 2.5s linear infinite;
+  animation: qualityCometOrbit 2s linear infinite;
 }
 
 .qSpark.core {

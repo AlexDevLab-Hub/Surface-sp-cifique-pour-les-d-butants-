@@ -702,19 +702,19 @@ function EquipementsPage() {
     <DeviceRange
       name="ASAP 2420"
       className="asap2420"
-      text="Surface BET, analyses de routine et mesures rapides."
+      text="L’ASAP 2420 est principalement dédié aux analyses de routine et à la détermination des surfaces spécifiques BET. Cet instrument est privilégié pour les échantillons susceptibles de contenir des composés pouvant polluer le circuit d’analyse, notamment certains produits chlorés ou issus d’unités de raffinage."
     />
 
     <DeviceRange
       name="ASAP 2425"
       className="asap2425"
-      text="Surface BET, volume poreux total et caractérisation poreuse avancée."
+      text="Plus récent, l’ASAP 2425 offre de meilleures performances à faible P/P₀. Il est utilisé pour la détermination des BET, VPT ainsi que pour les isothermes nécessitant une visibilité sur la fin de la microporosité. Cet instrument est réservé aux produits ne présentant aucun risque de pollution."
     />
 
     <DeviceRange
       name="3Flex"
       className="threeFlex"
-      text="Microporosité, très faibles pressions relatives et analyses de haute précision."
+      text="Cet appareil de haute précision, capable d’atteindre des vides très profonds, est principalement utilisé pour l’analyse micropore afin d’avoir une visibilité totale de la zone microporeuse."
     />
   </div>
 
@@ -747,22 +747,22 @@ function EquipementsPage() {
         <div className="equipmentGrid">
           <EquipmentItem
             title="Smart VacPrep"
-            text="Préparation et dégazage automatisés des échantillons avant analyse."
+            text="Dégazage automatisé sous vide de 6 échantillons simultanément, capable d’atteindre 450 °C et des niveaux de vide très profonds grâce à sa pompe turbomoléculaire."
           />
 
           <EquipmentItem
             title="Pompe à vide hydraulique"
-            text="Production du vide primaire utilisé lors des opérations de préparation et de dégazage."
+            text="Production du vide primaire utilisé lors des opérations de dégazage et d'analyse sur l'ASAP 2420."
           />
 
           <EquipmentItem
             title="Pompe à vide à membrane"
-            text="Production d’un vide propre et sans huile pour les opérations de préparation."
+            text="Production d’un vide primaire, propre et sans huile pour les opérations de dégazage et d'analyse sur l'ASAP 2425, Smart VacPrep et 3Flex."
           />
 
           <EquipmentItem
             title="Pompe à vide turbomoléculaire"
-            text="Obtention d’un vide poussé indispensable aux analyses de haute précision."
+            text="Obtention d’un vide secondaire très poussé indispensable aux analyses de haute précision. Ce type de pompe est utilisé sur l'ASAP 2425, Smart VacPrep et 3Flex."
           />
 
           <EquipmentItem
@@ -801,9 +801,16 @@ function DeviceRange({ name, className, text }) {
 
 function EquipmentItem({ title, text }) {
   return (
-    <div className="equipmentItem">
-      <h3>{title}</h3>
-      <p>{text}</p>
+    <div className="equipmentFlip">
+      <div className="equipmentFlipInner">
+        <div className="equipmentFlipFace equipmentFlipFront">
+          <h3>{title}</h3>
+        </div>
+
+        <div className="equipmentFlipFace equipmentFlipBack">
+          <p>{text}</p>
+        </div>
+      </div>
     </div>
   )
 }
