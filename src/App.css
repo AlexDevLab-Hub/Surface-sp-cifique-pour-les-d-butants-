@@ -2525,3 +2525,44 @@ body {
     offset-distance: 100%;
   }
 }
+
+.step0 .microStack span,
+.step1 .seqMono span,
+.step2 .seqMulti span {
+  animation: nitrogenDrop 2.4s cubic-bezier(.22,.75,.25,1) both;
+  animation-delay: var(--dropDelay);
+}
+
+.step2 .seqMono span,
+.step3 .seqMono span,
+.step3 .seqMulti span,
+.step3 .microStack span {
+  opacity: 1;
+  transform: translate(0, 0) scale(1);
+}
+
+@keyframes nitrogenDrop {
+  0% {
+    opacity: 0;
+    transform: translate(var(--dropX), -150px) scale(0.85);
+  }
+
+  35% {
+    opacity: 0;
+    transform: translate(var(--dropX), -150px) scale(0.85);
+  }
+
+  55% {
+    opacity: 1;
+  }
+
+  85% {
+    opacity: 1;
+    transform: translate(calc(var(--dropX) * 0.2), 6px) scale(1);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translate(0, 0) scale(1);
+  }
+}

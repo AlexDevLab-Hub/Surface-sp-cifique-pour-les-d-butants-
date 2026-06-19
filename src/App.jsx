@@ -434,7 +434,7 @@ function AdsorptionSequence() {
         <p>{steps[step].text}</p>
       </div>
 
-      <div className={`cleanSequence step${step}`}>
+      <div key={step} className={`cleanSequence step${step}`}>
         <div className="seqTitle">Vue simplifiée dans un pore</div>
 
         <div className="seqPore">
@@ -445,24 +445,62 @@ function AdsorptionSequence() {
   {step === 0 && (
     <div className="microStack">
       {Array.from({ length: 12 }).map((_, i) => (
-        <span key={i} />
-      ))}
+  <span
+    key={i}
+    style={{
+  '--dropDelay': `${0.12 + i * 0.08}s`,
+  '--dropX': `${(Math.random() - 0.5) * 28}px`,
+}}
+  />
+))}
     </div>
   )}
 </div>
 
           <div className="seqMono left">
-            {Array.from({ length: 10 }).map((_, i) => <span key={i} />)}
+            {Array.from({ length: 12 }).map((_, i) => (
+  <span
+    key={i}
+    style={{
+  '--dropDelay': `${0.12 + i * 0.08}s`,
+  '--dropX': `${(Math.random() - 0.5) * 28}px`,
+}}
+  />
+))}
           </div>
           <div className="seqMono right">
-            {Array.from({ length: 10 }).map((_, i) => <span key={i} />)}
+            {Array.from({ length: 12 }).map((_, i) => (
+  <span
+    key={i}
+    style={{
+  '--dropDelay': `${0.12 + i * 0.08}s`,
+  '--dropX': `${(Math.random() - 0.5) * 28}px`,
+}}
+  />
+))}
           </div>
 
           <div className="seqMulti left">
-            {Array.from({ length: 8 }).map((_, i) => <span key={i} />)}
+            {Array.from({ length: 12 }).map((_, i) => (
+  <span
+    key={i}
+    style={{
+  '--dropDelay': `${0.12 + i * 0.08}s`,
+  '--dropX': `${(Math.random() - 0.5) * 28}px`,
+}}
+  />
+))}
           </div>
           <div className="seqMulti right">
-            {Array.from({ length: 8 }).map((_, i) => <span key={i} />)}
+            {Array.from({ length: 12 }).map((_, i) => (
+  <span
+    key={i}
+    style={{
+  '--dropDelay': `${0.12 + i * 0.08}s`,
+  '--dropX': `${(Math.random() - 0.5) * 28}px`,
+}}
+  />
+))}
           </div>
 
           <div className="seqCondensed" />
@@ -702,7 +740,7 @@ function EquipementsPage() {
     <DeviceRange
       name="ASAP 2420"
       className="asap2420"
-      text="L’ASAP 2420 est principalement dédié aux analyses de routine et à la détermination des surfaces spécifiques BET. Cet instrument est privilégié pour les échantillons susceptibles de contenir des composés pouvant polluer le circuit d’analyse, notamment certains produits chlorés ou issus d’unités de raffinage."
+      text="L’ASAP 2420 est principalement dédié aux analyses de routine et à la détermination des BET. Cet instrument est privilégié pour les échantillons susceptibles de contenir des composés pouvant polluer le circuit d’analyse, notamment certains produits chlorés ou issus d’unités de raffinage."
     />
 
     <DeviceRange
