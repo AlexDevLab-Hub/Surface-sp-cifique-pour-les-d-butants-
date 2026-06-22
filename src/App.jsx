@@ -111,20 +111,23 @@ function HomePage() {
 
       <section id="conclusion" className="section twoCols">
   <TextCard
-    badge="5. Conclusion"
-    title="L’adsorption d’azote révèle la surface cachée des matériaux."
-  >
-    <p>
-      Toute la mesure BET consiste à estimer combien de surface est accessible aux molécules d’azote.
-    </p>
-    <p>
-      Plus les molécules peuvent accéder à des parois internes, plus la surface spécifique calculée est élevée.
-    </p>
+  badge="5. Conclusion"
+  title="L’adsorption d’azote révèle la surface cachée des matériaux."
+>
+  <p>
+    Toute la mesure BET consiste à estimer combien de surface est accessible aux molécules d’azote.
+  </p>
 
+  <p>
+    Plus les molécules peuvent accéder à des parois internes, plus la surface spécifique calculée est élevée.
+  </p>
+
+  <div className="standaloneNextButton">
     <Link className="nextPageButton" to="/determinations">
-  Explorer les autres analyses à l’azote
-</Link>
-  </TextCard>
+      Explorer les différentes déterminations à l'azote
+    </Link>
+  </div>
+</TextCard>
 
   <BETConclusion />
 </section>

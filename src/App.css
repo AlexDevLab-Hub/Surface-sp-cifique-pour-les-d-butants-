@@ -2608,3 +2608,24 @@ body {
     transform: translateX(0) scale(1);
   }
 }
+
+.standaloneNextButton {
+  width: 100%;
+  margin-top: 48px;
+  display: flex;
+  justify-content: center;
+  clear: both;
+}
+
+.standaloneNextButton .nextPageButton {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  width: 100%;
+  max-width: 460px;
+
+  text-align: center;
+  line-height: 1.35;
+  white-space: normal;
+}
