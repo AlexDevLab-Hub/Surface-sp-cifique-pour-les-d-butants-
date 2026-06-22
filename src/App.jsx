@@ -1,5 +1,5 @@
 import { Routes, Route, Link, useLocation } from 'react-router-dom'
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { motion } from 'framer-motion'
 import './App.css'
 
@@ -397,6 +397,26 @@ function PoreShape({ className, fill }) {
 
 function AdsorptionSequence() {
   const [step, setStep] = useState(0)
+  const [replayKey, setReplayKey] = useState(0)
+  const sequenceRef = useRef(null)
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setStep(0)
+          setReplayKey((key) => key + 1)
+        }
+      },
+      { threshold: 0.45 }
+    )
+
+    if (sequenceRef.current) {
+      observer.observe(sequenceRef.current)
+    }
+
+    return () => observer.disconnect()
+  }, [])
 
   const steps = [
     {
@@ -418,7 +438,7 @@ function AdsorptionSequence() {
   ]
 
   return (
-    <div className="simGrid">
+    <div className="simGrid" ref={sequenceRef}>
       <div className="controlPanel sequencePanel">
         <div className="bigValue sequenceBigValue">{steps[step].title}</div>
 
@@ -434,74 +454,95 @@ function AdsorptionSequence() {
         <p>{steps[step].text}</p>
       </div>
 
-      <div key={step} className={`cleanSequence step${step}`}>
-        <div className="seqTitle">Vue simplifiée dans un pore</div>
+      <div key={`${step}-${replayKey}`} className={`cleanSequence step${step}`}>
+        <div className="seqTitle">
+  {step === 0
+    ? 'Vue simplifiée dans un micropore'
+    : step === 3
+    ? 'Vue simplifiée dans un macropore'
+    : 'Vue simplifiée dans un mésopore'}
+</div>
 
         <div className="seqPore">
           <div className="seqWall left" />
           <div className="seqWall right" />
 
           <div className="seqMicroFill">
-  {step === 0 && (
+  {(step === 0 || step === 3) && (
     <div className="microStack">
       {Array.from({ length: 12 }).map((_, i) => (
-  <span
-    key={i}
-    style={{
-  '--dropDelay': `${0.12 + i * 0.08}s`,
-  '--dropX': `${(Math.random() - 0.5) * 28}px`,
+        <span
+          key={i}
+          style={{
+  '--dropDelay': `${Math.random() * 0.9}s`,
+  '--fallDuration': `${2.8 + Math.random() * 0.9}s`,
+  '--swayA': `${(Math.random() - 0.5) * 30}px`,
 }}
-  />
-))}
+        />
+      ))}
     </div>
   )}
 </div>
 
-          <div className="seqMono left">
-            {Array.from({ length: 12 }).map((_, i) => (
-  <span
-    key={i}
-    style={{
-  '--dropDelay': `${0.12 + i * 0.08}s`,
-  '--dropX': `${(Math.random() - 0.5) * 28}px`,
+{step >= 1 && (
+  <>
+    <div className="seqMono left">
+      {Array.from({ length: 12 }).map((_, i) => (
+        <span
+          key={i}
+          style={{
+  '--dropDelay': `${Math.random() * 0.9}s`,
+  '--fallDuration': `${2.8 + Math.random() * 0.9}s`,
+  '--swayA': `${(Math.random() - 0.5) * 30}px`,
 }}
-  />
-))}
-          </div>
-          <div className="seqMono right">
-            {Array.from({ length: 12 }).map((_, i) => (
-  <span
-    key={i}
-    style={{
-  '--dropDelay': `${0.12 + i * 0.08}s`,
-  '--dropX': `${(Math.random() - 0.5) * 28}px`,
-}}
-  />
-))}
-          </div>
+        />
+      ))}
+    </div>
 
-          <div className="seqMulti left">
-            {Array.from({ length: 12 }).map((_, i) => (
-  <span
-    key={i}
-    style={{
-  '--dropDelay': `${0.12 + i * 0.08}s`,
-  '--dropX': `${(Math.random() - 0.5) * 28}px`,
+    <div className="seqMono right">
+      {Array.from({ length: 12 }).map((_, i) => (
+        <span
+          key={i}
+          style={{
+  '--dropDelay': `${Math.random() * 0.9}s`,
+  '--fallDuration': `${2.8 + Math.random() * 0.9}s`,
+  '--swayA': `${(Math.random() - 0.5) * 30}px`,
 }}
-  />
-))}
-          </div>
-          <div className="seqMulti right">
-            {Array.from({ length: 12 }).map((_, i) => (
-  <span
-    key={i}
-    style={{
-  '--dropDelay': `${0.12 + i * 0.08}s`,
-  '--dropX': `${(Math.random() - 0.5) * 28}px`,
+        />
+      ))}
+    </div>
+  </>
+)}
+
+{step >= 2 && (
+  <>
+    <div className="seqMulti left">
+      {Array.from({ length: 12 }).map((_, i) => (
+        <span
+          key={i}
+          style={{
+  '--dropDelay': `${Math.random() * 0.9}s`,
+  '--fallDuration': `${2.8 + Math.random() * 0.9}s`,
+  '--swayA': `${(Math.random() - 0.5) * 30}px`,
 }}
-  />
-))}
-          </div>
+        />
+      ))}
+    </div>
+
+    <div className="seqMulti right">
+      {Array.from({ length: 12 }).map((_, i) => (
+        <span
+          key={i}
+          style={{
+  '--dropDelay': `${Math.random() * 0.9}s`,
+  '--fallDuration': `${2.8 + Math.random() * 0.9}s`,
+  '--swayA': `${(Math.random() - 0.5) * 30}px`,
+}}
+        />
+      ))}
+    </div>
+  </>
+)}
 
           <div className="seqCondensed" />
         </div>

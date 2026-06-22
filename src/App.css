@@ -1277,7 +1277,17 @@ h2 {
 }
 
 .step3 .seqCondensed {
-  height: 78%;
+  animation: seqCondensedRise 2.2s ease-out forwards;
+}
+
+@keyframes seqCondensedRise {
+  from {
+    height: 0;
+  }
+
+  to {
+    height: 78%;
+  }
 }
 
 .step3 .seqMeniscus {
@@ -2526,43 +2536,75 @@ body {
   }
 }
 
+.seqMono span,
+.seqMulti span,
+.microStack span {
+  background: transparent;
+  box-shadow: none;
+  position: relative;
+}
+
+.seqMono span::before,
+.seqMulti span::before,
+.microStack span::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: #e0f2fe;
+  box-shadow: 0 0 16px #7dd3fc;
+}
+
 .step0 .microStack span,
 .step1 .seqMono span,
 .step2 .seqMulti span {
-  animation: nitrogenDrop 2.4s cubic-bezier(.22,.75,.25,1) both;
+  animation: nitrogenFallY var(--fallDuration) linear both;
   animation-delay: var(--dropDelay);
+  will-change: transform, opacity;
 }
 
-.step2 .seqMono span,
-.step3 .seqMono span,
-.step3 .seqMulti span,
-.step3 .microStack span {
-  opacity: 1;
-  transform: translate(0, 0) scale(1);
+.step0 .microStack span::before,
+.step1 .seqMono span::before,
+.step2 .seqMulti span::before {
+  animation: nitrogenSwayX var(--fallDuration) ease-in-out both;
+  animation-delay: var(--dropDelay);
+  will-change: transform;
 }
 
-@keyframes nitrogenDrop {
+@keyframes nitrogenFallY {
   0% {
     opacity: 0;
-    transform: translate(var(--dropX), -150px) scale(0.85);
+    transform: translateY(-95px);
   }
 
-  35% {
-    opacity: 0;
-    transform: translate(var(--dropX), -150px) scale(0.85);
-  }
-
-  55% {
+  12% {
     opacity: 1;
-  }
-
-  85% {
-    opacity: 1;
-    transform: translate(calc(var(--dropX) * 0.2), 6px) scale(1);
   }
 
   100% {
     opacity: 1;
-    transform: translate(0, 0) scale(1);
+    transform: translateY(0);
+  }
+}
+
+@keyframes nitrogenSwayX {
+  0% {
+    transform: translateX(var(--swayA)) scale(0.9);
+  }
+
+  25% {
+    transform: translateX(calc(var(--swayA) * -0.65)) scale(0.95);
+  }
+
+  50% {
+    transform: translateX(calc(var(--swayA) * 0.45)) scale(1);
+  }
+
+  75% {
+    transform: translateX(calc(var(--swayA) * -0.25)) scale(1);
+  }
+
+  100% {
+    transform: translateX(0) scale(1);
   }
 }
