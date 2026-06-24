@@ -38,6 +38,26 @@ function HomePage() {
       </div>
       </section>
 
+      <section className="journeyNav">
+  <span className="journeyLabel">
+    Explorer le parcours :
+  </span>
+
+  <div className="journeyLinks">
+    <Link to="/" className="journeyLink active">
+      Adsorption
+    </Link>
+
+    <Link to="/determinations" className="journeyLink">
+      Déterminations
+    </Link>
+
+    <Link to="/appareils" className="journeyLink">
+      Appareils
+    </Link>
+  </div>
+</section>
+
       <section id="surface" className="section">
         <TextCard
   badge="1. L’idée de base"
@@ -881,13 +901,7 @@ function EquipementsPage() {
           <p>
             Les performances de nos instruments sont régulièrement contrôlées à l’aide de références certifiées Micromeritics afin de garantir la justesse et la reproductibilité des résultats.
           </p>
-          <div className="qualityComet" aria-hidden="true">
-  <span className="qSpark core" />
-  <span className="qSpark trail t1" />
-  <span className="qSpark trail t2" />
-  <span className="qSpark trail t3" />
-  <span className="qSpark trail t4" />
-</div>
+        
         </div>
 
         <div className="pageBadge">
@@ -897,7 +911,7 @@ function EquipementsPage() {
         <div className="equipmentGrid">
           <EquipmentItem
             title="Smart VacPrep"
-            text="Dégazage automatisé sous vide de 6 échantillons simultanément, capable d’atteindre 450 °C et des niveaux de vide très profonds grâce à sa pompe turbomoléculaire."
+            text="Dégazage sous vide de 6 échantillons simultanément, capable d’atteindre 450 °C et des niveaux de vide très profonds grâce à sa pompe turbomoléculaire."
           />
 
           <EquipmentItem
@@ -1034,7 +1048,7 @@ function DeterminationCard({ title, text, highlight, type }) {
       </button>
 
       <div className={paused ? 'graphPaused' : ''}>
-        <AnimatedGraph type={type} />
+        <AnimatedGraph type={type} paused={paused} />
       </div>
 
       <h3>{title}</h3>
@@ -1051,7 +1065,7 @@ function DeterminationCard({ title, text, highlight, type }) {
   )
 }
 
-function AnimatedGraph({ type }) {
+function AnimatedGraph({ type, paused = false }) {
 const adsorptionPath =
 type === 'micro'
     ? 'M40 182 C40 120, 42 110, 55 108 C75 108, 95 108, 118 108 C170 108, 210 108, 226 72 C242 38, 266 36, 290 34'
@@ -1081,11 +1095,13 @@ const desorptionPath =
     <path
       className="graphIsoReplay graphIsoAdsorption"
       d={adsorptionPath}
+      style={{ animationPlayState: paused ? 'paused' : 'running' }}
     />
 
     <path
       className="graphIsoReplay graphIsoDesorption"
       d={desorptionPath}
+      style={{ animationPlayState: paused ? 'paused' : 'running' }}
     />
   </>
 )}
