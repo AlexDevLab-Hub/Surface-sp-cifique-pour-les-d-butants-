@@ -654,6 +654,34 @@ function CapillaryCondensation() {
 }
 
 function BETConclusion() {
+  const [paused, setPaused] = useState(false)
+  const [replayKey, setReplayKey] = useState(0)
+  const conclusionRef = useRef(null)
+
+  useEffect(() => {
+  let wasVisible = false
+
+  const observer = new IntersectionObserver(
+    ([entry]) => {
+      if (entry.isIntersecting && !wasVisible) {
+        wasVisible = true
+        setPaused(false)
+        setReplayKey((key) => key + 1)
+      }
+
+      if (!entry.isIntersecting) {
+        wasVisible = false
+      }
+    },
+    { threshold: 0.25 }
+  )
+
+  if (conclusionRef.current) {
+    observer.observe(conclusionRef.current)
+  }
+
+  return () => observer.disconnect()
+}, [])
   const smoothMolecules = [
     0.06, 0.14, 0.22, 0.30, 0.38, 0.46, 0.54, 0.62, 0.70, 0.78, 0.86, 0.94,
   ]
@@ -664,8 +692,19 @@ function BETConclusion() {
   ]
 
   return (
-    <div className="betSummaryCard">
-      <div className="surfaceSceneBox">
+    <div
+  ref={conclusionRef}
+  className={`betSummaryCard ${paused ? 'paused' : ''}`}
+>
+      <div key={replayKey} className="surfaceSceneBox">
+        <button
+  className="conclusionPauseButton"
+  type="button"
+  onClick={() => setPaused(!paused)}
+  aria-label={paused ? 'Reprendre l’animation' : 'Mettre l’animation en pause'}
+>
+  {paused ? '▶' : '⏸'}
+</button>
         <div className="surfaceSceneSvg">
           <svg viewBox="0 0 420 330" className="betSurfaceSvg">
             <path
@@ -704,28 +743,30 @@ function BETConclusion() {
 </g>
 
 <g className="porousMolecules">
-  <circle cx="58" cy="178" r="6.5" />
-  <circle cx="78" cy="151" r="6.5" />
+  <circle cx="56" cy="172" r="6.5" />
+  <circle cx="74" cy="148" r="6.5" />
   <circle cx="98" cy="131" r="6.5" />
   <circle cx="121" cy="116" r="6.5" />
   <circle cx="147" cy="108" r="6.5" />
 
-  <circle cx="169" cy="129" r="6.5" />
-  <circle cx="171" cy="154" r="6.5" />
-  <circle cx="163" cy="181" r="6.5" />
-  <circle cx="171" cy="208" r="6.5" />
+  <circle cx="170" cy="110" r="6.5" />
+  <circle cx="188" cy="127" r="6.5" />
+  <circle cx="190" cy="154" r="6.5" />
+  <circle cx="182" cy="181" r="6.5" />
+  <circle cx="178" cy="208" r="6.5" />
 
   <circle cx="196" cy="225" r="6.5" />
-  <circle cx="222" cy="220" r="6.5" />
+  <circle cx="222" cy="217" r="6.5" />
 
-  <circle cx="241" cy="198" r="6.5" />
-  <circle cx="247" cy="169" r="6.5" />
-  <circle cx="253" cy="142" r="6.5" />
+  <circle cx="227" cy="195" r="6.5" />
+  <circle cx="225" cy="169" r="6.5" />
+  <circle cx="228" cy="142" r="6.5" />
 
-  <circle cx="277" cy="125" r="6.5" />
-  <circle cx="304" cy="134" r="6.5" />
-  <circle cx="328" cy="153" r="6.5" />
-  <circle cx="350" cy="176" r="6.5" />
+  <circle cx="250" cy="120" r="6.5" />
+  <circle cx="277" cy="119" r="6.5" />
+  <circle cx="307" cy="130" r="6.5" />
+  <circle cx="328" cy="145" r="6.5" />
+  <circle cx="350" cy="164" r="6.5" />
 </g>
 
             <text x="210" y="315" textAnchor="middle" className="betUpText">
