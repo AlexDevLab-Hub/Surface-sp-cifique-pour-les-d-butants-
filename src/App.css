@@ -2625,10 +2625,24 @@ body {
   text-align: center;
 }
 
+.surfaceSceneBox {
+  width: min(100%, 520px);
+  padding: 30px 28px 28px;
+
+  border-radius: 32px;
+  border: 1px solid rgba(255,255,255,0.14);
+
+  background:
+    radial-gradient(circle at 50% 12%, rgba(96,165,250,0.14), transparent 34%),
+    linear-gradient(180deg, rgba(2,6,23,0.24), rgba(15,23,42,0.72));
+
+  box-shadow: 0 30px 90px rgba(0,0,0,0.32);
+}
+
 .surfaceSceneSvg {
   position: relative;
-  width: min(100%, 430px);
-  height: 365px;
+  width: 100%;
+  height: 360px;
 }
 
 .betSurfaceSvg {
@@ -2652,12 +2666,11 @@ body {
 
 .porousSurface {
   opacity: 0;
-  stroke: rgba(96,165,250,0.95);
   animation: porousSurfaceCycle 7s ease-in-out infinite;
 }
 
-.smoothMolecules,
-.porousMolecules {
+.smoothMolecules circle,
+.porousMolecules circle {
   fill: #e0f2fe;
   filter:
     drop-shadow(0 0 8px rgba(125,211,252,0.9))
@@ -2687,7 +2700,7 @@ body {
   position: absolute;
   left: 0;
   right: 0;
-  top: 18px;
+  top: 12px;
   color: #dbeafe;
   font-weight: 800;
   font-size: 20px;
@@ -2702,12 +2715,12 @@ body {
   animation: internalLabelCycle 7s ease-in-out infinite;
 }
 
-.betSummaryCard p {
+.surfaceSceneBox p {
   max-width: 420px;
-  margin: 0 auto;
+  margin: 8px auto 0;
   color: #cbd5e1;
   line-height: 1.65;
-  font-size: 18px;
+  font-size: 17px;
 }
 
 @keyframes smoothSurfaceCycle {
@@ -2718,8 +2731,8 @@ body {
 @keyframes porousSurfaceCycle {
   0%, 42% {
     opacity: 0;
-    stroke-dasharray: 520;
-    stroke-dashoffset: 520;
+    stroke-dasharray: 560;
+    stroke-dashoffset: 560;
   }
 
   56% {

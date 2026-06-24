@@ -654,76 +654,93 @@ function CapillaryCondensation() {
 }
 
 function BETConclusion() {
+  const smoothMolecules = [
+    0.06, 0.14, 0.22, 0.30, 0.38, 0.46, 0.54, 0.62, 0.70, 0.78, 0.86, 0.94,
+  ]
+
+  const porousMolecules = [
+    0.04, 0.10, 0.16, 0.22, 0.28, 0.34, 0.40, 0.46, 0.52, 0.58,
+    0.64, 0.70, 0.76, 0.82, 0.88, 0.94,
+  ]
+
   return (
     <div className="betSummaryCard">
-      <div className="surfaceSceneSvg">
-        <svg viewBox="0 0 420 300" className="betSurfaceSvg">
-          <path
-            className="surfacePath smoothSurface"
-            d="M55 185 C115 95, 305 95, 365 185"
-          />
+      <div className="surfaceSceneBox">
+        <div className="surfaceSceneSvg">
+          <svg viewBox="0 0 420 330" className="betSurfaceSvg">
+            <path
+              id="smoothSurfacePath"
+              className="surfacePath smoothSurface"
+              d="M55 185 C115 95, 305 95, 365 185"
+            />
 
-          <path
-            className="surfacePath porousSurface"
-            d="M55 185 C92 130, 132 112, 168 118
-               C182 122, 188 138, 184 154
-               C178 178, 164 192, 172 204
-               C184 222, 214 220, 226 202
-               C238 184, 224 162, 232 144
-               C242 122, 278 120, 302 134
-               C326 148, 348 166, 365 185"
-          />
+            <path
+              id="porousSurfacePath"
+              className="surfacePath porousSurface"
+              d="M55 185 C92 130, 132 112, 168 118
+                 C182 122, 188 138, 184 154
+                 C178 182, 164 205, 174 220
+                 C188 240, 218 238, 230 216
+                 C244 190, 224 162, 236 140
+                 C248 118, 282 122, 306 138
+                 C330 154, 350 174, 365 185"
+            />
 
-<g className="smoothMolecules">
-  <circle cx="74" cy="145" r="6.5" />
-  <circle cx="94" cy="126" r="6.5" />
-  <circle cx="116" cy="111" r="6.5" />
-  <circle cx="141" cy="100" r="6.5" />
-  <circle cx="168" cy="94" r="6.5" />
-  <circle cx="197" cy="91" r="6.5" />
-  <circle cx="226" cy="94" r="6.5" />
-  <circle cx="254" cy="101" r="6.5" />
-  <circle cx="281" cy="113" r="6.5" />
-  <circle cx="306" cy="130" r="6.5" />
-  <circle cx="328" cy="151" r="6.5" />
+            <g className="smoothMolecules">
+  {smoothMolecules.map((p, i) => (
+    <circle key={i} r="6.5" transform="translate(0 -10)">
+      <animateMotion
+        dur="0.01s"
+        begin={`${p}s`}
+        fill="freeze"
+        keyPoints={`${p};${p}`}
+        keyTimes="0;1"
+        calcMode="linear"
+      >
+        <mpath href="#smoothSurfacePath" />
+      </animateMotion>
+    </circle>
+  ))}
 </g>
 
 <g className="porousMolecules">
-  <circle cx="74" cy="145" r="6.5" />
-  <circle cx="94" cy="126" r="6.5" />
-  <circle cx="116" cy="111" r="6.5" />
-  <circle cx="140" cy="101" r="6.5" />
+  <circle cx="58" cy="178" r="6.5" />
+  <circle cx="78" cy="151" r="6.5" />
+  <circle cx="98" cy="131" r="6.5" />
+  <circle cx="121" cy="116" r="6.5" />
+  <circle cx="147" cy="108" r="6.5" />
 
-  <circle cx="165" cy="109" r="6.5" />
-  <circle cx="177" cy="133" r="6.5" />
-  <circle cx="177" cy="160" r="6.5" />
-  <circle cx="168" cy="188" r="6.5" />
+  <circle cx="169" cy="129" r="6.5" />
+  <circle cx="171" cy="154" r="6.5" />
+  <circle cx="163" cy="181" r="6.5" />
+  <circle cx="171" cy="208" r="6.5" />
 
-  <circle cx="187" cy="216" r="6.5" />
-  <circle cx="214" cy="218" r="6.5" />
+  <circle cx="196" cy="225" r="6.5" />
+  <circle cx="222" cy="220" r="6.5" />
 
-  <circle cx="234" cy="187" r="6.5" />
-  <circle cx="236" cy="158" r="6.5" />
-  <circle cx="245" cy="134" r="6.5" />
+  <circle cx="241" cy="198" r="6.5" />
+  <circle cx="247" cy="169" r="6.5" />
+  <circle cx="253" cy="142" r="6.5" />
 
-  <circle cx="267" cy="115" r="6.5" />
-  <circle cx="296" cy="121" r="6.5" />
-  <circle cx="322" cy="141" r="6.5" />
-  <circle cx="347" cy="163" r="6.5" />
+  <circle cx="277" cy="125" r="6.5" />
+  <circle cx="304" cy="134" r="6.5" />
+  <circle cx="328" cy="153" r="6.5" />
+  <circle cx="350" cy="176" r="6.5" />
 </g>
 
-          <text x="210" y="285" textAnchor="middle" className="betUpText">
-  BET ↑
-</text>
-        </svg>
+            <text x="210" y="315" textAnchor="middle" className="betUpText">
+              BET ↑
+            </text>
+          </svg>
 
-        <div className="sceneLabel limited">Surface accessible limitée</div>
-        <div className="sceneLabel internal">Surface interne accessible</div>
+          <div className="sceneLabel limited">Surface accessible limitée</div>
+          <div className="sceneLabel internal">Surface interne accessible</div>
+        </div>
+
+        <p>
+          Plus les molécules accèdent à des surfaces internes, plus la surface BET calculée augmente.
+        </p>
       </div>
-
-      <p>
-        Plus l’azote atteint de parois internes, plus la surface spécifique calculée est élevée.
-      </p>
     </div>
   )
 }
