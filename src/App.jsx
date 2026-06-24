@@ -1,7 +1,156 @@
 import { Routes, Route, Link, useLocation } from 'react-router-dom'
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { createContext, useContext, useEffect, useMemo, useRef, useState } from 'react'
 import { motion } from 'framer-motion'
 import './App.css'
+
+const translations = {
+  "en": {
+    "Intro": "Intro",
+    "Surface": "Surface",
+    "Pores": "Pores",
+    "Adsorption": "Adsorption",
+    "Conclusion": "Conclusion",
+    "Comprendre l'adsorption d'azote": "Understanding nitrogen adsorption",
+    "Une bille peut sembler petite, mais révéler une surface interne immense grâce à sa porosité.": "A bead may seem small, yet reveal an immense internal surface thanks to its porosity.",
+    "Explorer le parcours :": "Explore the pathway:",
+    "Déterminations": "Determinations",
+    "Appareils": "Instruments",
+    "1. L’idée de base": "1. The basic idea",
+    "Ce n’est pas le volume qui compte, c’est la surface accessible.": "What matters is not the volume, but the accessible surface area.",
+    "Imaginez une bille compacte : l’azote peut seulement toucher l’extérieur.": "Imagine a compact bead: nitrogen can only touch the outside.",
+    "Maintenant, imaginez une bille remplie de tunnels minuscules : l’azote peut entrer et toucher beaucoup plus de parois. La surface disponible augmente fortement.": "Now imagine a bead filled with tiny tunnels: nitrogen can enter and touch many more walls. The available surface area increases sharply.",
+    "Compact": "Compact",
+    "Peu de surface accessible.": "Little accessible surface area.",
+    "Poreux": "Porous",
+    "Des cavités ajoutent de la surface interne.": "Cavities add internal surface area.",
+    "Microporeux": "Microporous",
+    "Beaucoup de petits pores créent une surface énorme.": "Many small pores create a huge surface area.",
+    "2. Les types de pores": "2. Types of pores",
+    "Micropores, mésopores et macropores.": "Micropores, mesopores and macropores.",
+    "Les micropores sont très étroits, les mésopores sont intermédiaires, et les macropores sont de grandes cavités.": "Micropores are very narrow, mesopores are intermediate, and macropores are large cavities.",
+    "Micropore": "Micropore",
+    "Mésopore": "Mesopore",
+    "Macropore": "Macropore",
+    "Pore très étroit.": "Very narrow pore.",
+    "Pore de taille intermédiaire.": "Intermediate-size pore.",
+    "Grande cavité.": "Large cavity.",
+    "3. P/P₀": "3. P/P₀",
+    "Fais varier P/P₀ et observe le remplissage.": "Adjust P/P₀ and observe the filling.",
+    "P représente la pression de l'azote gazeux autour du matériau analysé.": "P represents the pressure of nitrogen gas around the analyzed material.",
+    "P₀ est la pression de saturation de l’azote. C'est a dire la pression à laquelle il se liquéfie.": "P₀ is the saturation pressure of nitrogen, meaning the pressure at which it liquefies.",
+    "P/P₀ indique à quel point on se rapproche de cette saturation.": "P/P₀ indicates how close we are to this saturation.",
+    "Pression nulle": "Zero pressure",
+    "Aucune molécule d’azote n’est adsorbée. La surface du matériau est libre.": "No nitrogen molecule is adsorbed. The material surface is free.",
+    "Micropores": "Micropores",
+    "À très faible P/P₀, les micropores commencent déjà à se remplir.": "At very low P/P₀, micropores already begin to fill.",
+    "Adsorption progressive": "Progressive adsorption",
+    "Les micropores sont largement remplis. Les mésopores commencent à se remplir à leur tour.": "Micropores are largely filled. Mesopores begin to fill in turn.",
+    "Condensation capillaire": "Capillary condensation",
+    "Les mésopores peuvent se remplir plus fortement par condensation capillaire.": "Mesopores can fill more strongly through capillary condensation.",
+    "Proche de la saturation": "Close to saturation",
+    "À l’approche de la saturation, l’azote atteint progressivement les plus grandes cavités du matériau.": "As saturation is approached, nitrogen progressively reaches the largest cavities of the material.",
+    "4. Séquence d’adsorption": "4. Adsorption sequence",
+    "Micropores, monocouche, multicouche, puis condensation.": "Micropores, monolayer, multilayer, then condensation.",
+    "L’azote ne remplit pas tout d’un coup. Il commence par les zones les plus attractives, puis forme des couches sur la surface, avant de condenser dans certains pores.": "Nitrogen does not fill everything at once. It starts with the most attractive zones, then forms layers on the surface before condensing in some pores.",
+    "1. Remplissage des micropores": "1. Micropore filling",
+    "Les micropores se remplissent en premier : c’est un remplissage de volume très étroit. (environ P/P0 = 0,1)": "Micropores fill first: this is the filling of a very narrow volume. (around P/P0 = 0.1)",
+    "2. Monocouche": "2. Monolayer",
+    "Une première couche d’azote se forme sur les parois internes accessibles. C’est a ce moment là que nous relevont la BET. (environ P/P0 = 0,3)": "A first layer of nitrogen forms on the accessible internal walls. This is when BET is measured. (around P/P0 = 0.3)",
+    "3. Multicouche": "3. Multilayer",
+    "À mesure que l’adsorption progresse, les molécules d’azote s’empilent et forment plusieurs couches sur la surface du matériau.": "As adsorption progresses, nitrogen molecules stack and form several layers on the material surface.",
+    "4. Condensation capillaire": "4. Capillary condensation",
+    "À l’approche de la pression de saturation, l’azote commence à se condenser dans les pores. La porosité accessible se remplit progressivement jusqu’à permettre l’estimation du volume poreux total. (environ P/P₀ = 0,995)": "As saturation pressure is approached, nitrogen begins to condense in the pores. The accessible porosity progressively fills until the total pore volume can be estimated. (around P/P₀ = 0.995)",
+    "Étape": "Step",
+    "Vue simplifiée dans un micropore": "Simplified view inside a micropore",
+    "Vue simplifiée dans un mésopore": "Simplified view inside a mesopore",
+    "Vue simplifiée dans un macropore": "Simplified view inside a macropore",
+    "Micropore → monocouche → multicouche → condensation de l'azote": "Micropore → monolayer → multilayer → nitrogen condensation",
+    "5. Conclusion": "5. Conclusion",
+    "L’adsorption d’azote révèle la surface cachée des matériaux.": "Nitrogen adsorption reveals the hidden surface of materials.",
+    "Toute la mesure BET consiste à estimer combien de surface est accessible aux molécules d’azote.": "The whole BET measurement consists of estimating how much surface area is accessible to nitrogen molecules.",
+    "Plus les molécules peuvent accéder à des parois internes, plus la surface spécifique calculée est élevée.": "The more molecules can access internal walls, the higher the calculated specific surface area.",
+    "Explorer les différentes déterminations à l'azote": "Explore the different nitrogen determinations",
+    "Surface accessible limitée": "Limited accessible surface area",
+    "Surface interne accessible": "Accessible internal surface area",
+    "Plus les molécules accèdent à des surfaces internes, plus la surface BET calculée augmente.": "The more molecules access internal surfaces, the more the calculated BET surface area increases.",
+    "Reprendre l’animation": "Resume animation",
+    "Mettre l’animation en pause": "Pause animation",
+    "← Retour": "← Back",
+    "Des équipements adaptés à chaque niveau de caractérisation.": "Equipment suited to each level of characterization.",
+    "Chaque analyse d’adsorption d’azote nécessite un équipement adapté à la précision recherchée. Notre laboratoire dispose de plusieurs instruments complémentaires permettant de réaliser des mesures de surface spécifique, de volume poreux total et de microporosité.": "Each nitrogen adsorption analysis requires equipment suited to the required precision. Our laboratory has several complementary instruments for measuring specific surface area, total pore volume and microporosity.",
+    "Nos appareils de mesure": "Our measuring instruments",
+    "Contrôle qualité": "Quality control",
+    "Les performances de nos instruments sont régulièrement contrôlées à l’aide de références certifiées Micromeritics afin de garantir la justesse et la reproductibilité des résultats.": "The performance of our instruments is regularly checked using certified Micromeritics references to ensure the accuracy and reproducibility of the results.",
+    "Nos équipements": "Our equipment",
+    "Survolez un appareil pour afficher ses caractéristiques": "Hover over an instrument to display its characteristics",
+    "L’ASAP 2420 est principalement dédié aux analyses de routine et à la détermination des BET. Cet instrument est privilégié pour les échantillons susceptibles de contenir des composés pouvant polluer le circuit d’analyse, notamment certains produits chlorés ou issus d’unités de raffinage.": "The ASAP 2420 is mainly dedicated to routine analyses and BET determination. This instrument is preferred for samples likely to contain compounds that could contaminate the analysis circuit, especially some chlorinated products or products from refining units.",
+    "Plus récent, l’ASAP 2425 offre de meilleures performances à faible P/P₀. Il est utilisé pour la détermination des BET, VPT ainsi que pour les isothermes nécessitant une visibilité sur la fin de la microporosité. Cet instrument est réservé aux produits ne présentant aucun risque de pollution.": "More recent, the ASAP 2425 offers better performance at low P/P₀. It is used for BET and TPV determination as well as for isotherms requiring visibility at the end of the microporosity range. This instrument is reserved for products presenting no risk of contamination.",
+    "Cet appareil de haute précision, capable d’atteindre des vides très profonds, est principalement utilisé pour l’analyse micropore afin d’avoir une visibilité totale de la zone microporeuse.": "This high-precision instrument, capable of reaching very deep vacuums, is mainly used for micropore analysis to provide full visibility of the microporous region.",
+    "Smart VacPrep": "Smart VacPrep",
+    "Dégazage sous vide de 6 échantillons simultanément, capable d’atteindre 450 °C et des niveaux de vide très profonds grâce à sa pompe turbomoléculaire.": "Vacuum degassing of 6 samples simultaneously, capable of reaching 450 °C and very deep vacuum levels thanks to its turbomolecular pump.",
+    "Pompe à vide hydraulique": "Hydraulic vacuum pump",
+    "Production du vide primaire utilisé lors des opérations de dégazage et d'analyse sur l'ASAP 2420.": "Production of the primary vacuum used during degassing and analysis operations on the ASAP 2420.",
+    "Pompe à vide à membrane": "Diaphragm vacuum pump",
+    "Production d’un vide primaire, propre et sans huile pour les opérations de dégazage et d'analyse sur l'ASAP 2425, Smart VacPrep et 3Flex.": "Production of a clean, oil-free primary vacuum for degassing and analysis operations on the ASAP 2425, Smart VacPrep and 3Flex.",
+    "Pompe à vide turbomoléculaire": "Turbomolecular vacuum pump",
+    "Obtention d’un vide secondaire très poussé indispensable aux analyses de haute précision. Ce type de pompe est utilisé sur l'ASAP 2425, Smart VacPrep et 3Flex.": "Obtaining a very high secondary vacuum, essential for high-precision analyses. This type of pump is used on the ASAP 2425, Smart VacPrep and 3Flex.",
+    "Balance de précision 0,0001 g": "Precision balance 0.0001 g",
+    "Pesée précise des échantillons afin de garantir la fiabilité des résultats.": "Precise weighing of samples to ensure the reliability of the results.",
+    "Unité antistatique": "Antistatic unit",
+    "Réduction des charges électrostatiques susceptibles d’influencer les opérations de pesée.": "Reduction of electrostatic charges likely to influence weighing operations.",
+    "Que peut-on déterminer avec une analyse d'adsorption à l'azote ?": "What can be determined with a nitrogen adsorption analysis?",
+    "L’adsorption d’azote ne sert pas uniquement à mesurer la surface spécifique BET. Différentes zones de l’isotherme permettent également d’obtenir des informations complémentaires sur la porosité du matériau analysé.": "Nitrogen adsorption is not only used to measure BET specific surface area. Different regions of the isotherm also provide additional information about the porosity of the analyzed material.",
+    "Surface BET": "BET surface area",
+    "Dans cette zone de l’isotherme, les molécules d’azote recouvrent progressivement la surface du matériau sous forme de monocouche. L’analyse de cinq points de mesure permet alors de calculer la surface spécifique BET.": "In this region of the isotherm, nitrogen molecules progressively cover the material surface as a monolayer. The analysis of five measurement points then allows the BET specific surface area to be calculated.",
+    "Zone BET : environ P/P₀ = 0,05 à 0,30": "BET region: around P/P₀ = 0.05 to 0.30",
+    "Volume poreux total": "Total pore volume",
+    "Lorsque P/P0 s'approche de 1, l’azote remplit progressivement l’ensemble de la porosité. La quantité totale de gaz adsorbée permet alors d’estimer le volume poreux total du matériau.": "When P/P0 approaches 1, nitrogen progressively fills the entire porosity. The total quantity of adsorbed gas then allows the total pore volume of the material to be estimated.",
+    "Lecture proche de P/P₀ = 1": "Reading close to P/P₀ = 1",
+    "Isotherme": "Isotherm",
+    "Au-delà de la surface spécifique BET et du volume poreux total, l’analyse de l’isotherme complet apporte des informations précieuses, notamment sur la répartition de la porosité, la taille et la forme des pores.": "Beyond BET specific surface area and total pore volume, analysis of the full isotherm provides valuable information, especially on pore distribution, size and shape.",
+    "Adsorption et désorption": "Adsorption and desorption",
+    "La microporosité s’observe à très faible P/P₀. Une forte adsorption dès les basses pressions indique la présence de pores très étroits. Sa mesure requiert une excellente précision de mesure et peut considérablement allonger la durée de l’analyse.": "Microporosity is observed at very low P/P₀. Strong adsorption at low pressures indicates the presence of very narrow pores. Its measurement requires excellent measurement precision and can considerably extend the analysis time.",
+    "Zone micropore : P/P0 < 0,1": "Micropore region: P/P0 < 0.1",
+    "Reprendre animation": "Resume animation",
+    "Mettre en pause": "Pause",
+    "Découvrez nos appareils de mesure et équipements": "Discover our measuring instruments and equipment",
+    "Quantité adsorbée": "Adsorbed quantity",
+    "Gaz dominant": "Dominant gas",
+    "À très faible P/P₀, l’azote est surtout gazeux. Le mésopore n’est pas encore recouvert.": "At very low P/P₀, nitrogen is mostly gaseous. The mesopore is not yet covered.",
+    "Une première couche apparaît sur les parois internes du mésopore.": "A first layer appears on the internal walls of the mesopore.",
+    "Plusieurs couches se forment avant la condensation capillaire.": "Several layers form before capillary condensation.",
+    "Le centre du mésopore se remplit : une phase condensée apparaît.": "The center of the mesopore fills: a condensed phase appears.",
+    "Cas limite macropore": "Macropore limit case",
+    "Très proche de P/P₀ = 1, les plus petits macropores peuvent commencer à se remplir.": "Very close to P/P₀ = 1, the smallest macropores may begin to fill.",
+    "Mésopore : monocouche → multicouche → condensation": "Mesopore: monolayer → multilayer → condensation",
+    "Petit macropore\ncas limite près de 1": "Small macropore\nlimit case near 1",
+    "Dans un micropore, deux parois proches attirent la molécule en même temps.": "In a micropore, two nearby walls attract the molecule at the same time."
+  }
+}
+
+const LanguageContext = createContext(null)
+
+function LanguageProvider({ children }) {
+  const [language, setLanguage] = useState(() => localStorage.getItem('siteLanguage') || 'fr')
+
+  useEffect(() => {
+    localStorage.setItem('siteLanguage', language)
+    document.documentElement.lang = language
+  }, [language])
+
+  const tr = (text) => translations[language]?.[text] || text
+
+  return (
+    <LanguageContext.Provider value={{ language, setLanguage, tr }}>
+      {children}
+    </LanguageContext.Provider>
+  )
+}
+
+function useLanguage() {
+  return useContext(LanguageContext)
+}
+
 
 function ScrollToTop() {
   const { pathname } = useLocation()
@@ -14,6 +163,8 @@ function ScrollToTop() {
 }
 
 function HomePage() {
+  const { tr } = useLanguage()
+
   useEffect(() => {
     if ('scrollRestoration' in history) {
       history.scrollRestoration = 'manual'
@@ -31,62 +182,60 @@ function HomePage() {
   <NitrogenField />
 
   <div className="heroText heroTextWide">
-    <h1>Comprendre l'adsorption d'azote</h1>
+    <h1>{tr("Comprendre l'adsorption d'azote")}</h1>
     <p className="lead">
-      Une bille peut sembler petite, mais révéler une surface interne immense grâce à sa porosité.
+      {tr("Une bille peut sembler petite, mais révéler une surface interne immense grâce à sa porosité.")}
       </p>
       </div>
       </section>
 
       <section className="journeyNav">
   <span className="journeyLabel">
-    Explorer le parcours :
+    {tr('Explorer le parcours :')}
   </span>
 
   <div className="journeyLinks">
     <Link to="/" className="journeyLink active">
-      Adsorption
+      {tr('Adsorption')}
     </Link>
 
     <Link to="/determinations" className="journeyLink">
-      Déterminations
+      {tr('Déterminations')}
     </Link>
 
-    <Link to="/appareils" className="journeyLink">
-      Appareils
+    <Link to="/equipements" className="journeyLink">
+      {tr('Appareils')}
     </Link>
   </div>
 </section>
 
       <section id="surface" className="section">
         <TextCard
-  badge="1. L’idée de base"
-  title="Ce n’est pas le volume qui compte, c’est la surface accessible."
+  badge={tr('1. L’idée de base')}
+  title={tr('Ce n’est pas le volume qui compte, c’est la surface accessible.')}
 >
   <p>
-    Imaginez une bille compacte : l’azote peut seulement toucher l’extérieur.
+    {tr('Imaginez une bille compacte : l’azote peut seulement toucher l’extérieur.')}
   </p>
   <p>
-    Maintenant, imaginez une bille remplie de tunnels minuscules : l’azote peut entrer
-    et toucher beaucoup plus de parois. La surface disponible augmente fortement.
+    {tr('Maintenant, imaginez une bille remplie de tunnels minuscules : l’azote peut entrer et toucher beaucoup plus de parois. La surface disponible augmente fortement.')}
   </p>
 </TextCard>
 
         <div className="surfaceCards">
-          <InfoCard title="Compact" text="Peu de surface accessible." type="compact" />
-          <InfoCard title="Poreux" text="Des cavités ajoutent de la surface interne." type="porous" />
-          <InfoCard title="Microporeux" text="Beaucoup de petits pores créent une surface énorme." type="micro" />
+          <InfoCard title={tr('Compact')} text={tr('Peu de surface accessible.')} type="compact" />
+          <InfoCard title={tr('Poreux')} text={tr('Des cavités ajoutent de la surface interne.')} type="porous" />
+          <InfoCard title={tr('Microporeux')} text={tr('Beaucoup de petits pores créent une surface énorme.')} type="micro" />
         </div>
       </section>
 
       <section id="pores" className="section twoCols">
         <TextCard
-          badge="2. Les types de pores"
-          title="Micropores, mésopores et macropores."
+          badge={tr('2. Les types de pores')}
+          title={tr('Micropores, mésopores et macropores.')}
         >
           <p>
-            Les micropores sont très étroits, les mésopores sont intermédiaires,
-            et les macropores sont de grandes cavités.
+            {tr('Les micropores sont très étroits, les mésopores sont intermédiaires, et les macropores sont de grandes cavités.')}
           </p>
           <p>
           </p>
@@ -97,17 +246,17 @@ function HomePage() {
 
       <section id="pp0" className="section">
         <TextCard
-          badge="3. P/P₀"
-          title="Fais varier P/P₀ et observe le remplissage."
+          badge={tr('3. P/P₀')}
+          title={tr('Fais varier P/P₀ et observe le remplissage.')}
         >
           <p>
-            P représente la pression de l'azote gazeux autour du matériau analysé.
+            {tr("P représente la pression de l'azote gazeux autour du matériau analysé.")}
           </p>
           <p>
-            P₀ est la pression de saturation de l’azote. C'est a dire la pression à laquelle il se liquéfie.
+            {tr("P₀ est la pression de saturation de l’azote. C'est a dire la pression à laquelle il se liquéfie.")}
           </p>
           <p>
-            P/P₀ indique à quel point on se rapproche de cette saturation.
+            {tr('P/P₀ indique à quel point on se rapproche de cette saturation.')}
           </p>
 
         </TextCard>
@@ -117,12 +266,11 @@ function HomePage() {
 
       <section id="sequence" className="section">
         <TextCard
-          badge="4. Séquence d’adsorption"
-          title="Micropores, monocouche, multicouche, puis condensation."
+          badge={tr('4. Séquence d’adsorption')}
+          title={tr('Micropores, monocouche, multicouche, puis condensation.')}
         >
           <p>
-            L’azote ne remplit pas tout d’un coup. Il commence par les zones les plus attractives,
-            puis forme des couches sur la surface, avant de condenser dans certains pores.
+            {tr('L’azote ne remplit pas tout d’un coup. Il commence par les zones les plus attractives, puis forme des couches sur la surface, avant de condenser dans certains pores.')}
           </p>
         </TextCard>
 
@@ -131,20 +279,20 @@ function HomePage() {
 
       <section id="conclusion" className="section twoCols">
   <TextCard
-  badge="5. Conclusion"
-  title="L’adsorption d’azote révèle la surface cachée des matériaux."
+  badge={tr('5. Conclusion')}
+  title={tr('L’adsorption d’azote révèle la surface cachée des matériaux.')}
 >
   <p>
-    Toute la mesure BET consiste à estimer combien de surface est accessible aux molécules d’azote.
+    {tr('Toute la mesure BET consiste à estimer combien de surface est accessible aux molécules d’azote.')}
   </p>
 
   <p>
-    Plus les molécules peuvent accéder à des parois internes, plus la surface spécifique calculée est élevée.
+    {tr('Plus les molécules peuvent accéder à des parois internes, plus la surface spécifique calculée est élevée.')}
   </p>
 
   <div className="standaloneNextButton">
     <Link className="nextPageButton" to="/determinations">
-      Explorer les différentes déterminations à l'azote
+      {tr("Explorer les différentes déterminations à l'azote")}
     </Link>
   </div>
 </TextCard>
@@ -157,7 +305,7 @@ function HomePage() {
 
 function App() {
   return (
-    <>
+    <LanguageProvider>
       <ScrollToTop />
 
       <Routes>
@@ -165,7 +313,7 @@ function App() {
         <Route path="/determinations" element={<DeterminationsPage />} />
         <Route path="/equipements" element={<EquipementsPage />} />
       </Routes>
-    </>
+    </LanguageProvider>
   )
 }
 
@@ -201,14 +349,32 @@ function GlobalNitrogen() {
 }
 
 function Nav() {
+  const { tr, language, setLanguage } = useLanguage()
+
   return (
     <nav className="nav">
-      <a href="#intro">Intro</a>
-      <a href="#surface">Surface</a>
-      <a href="#pores">Pores</a>
+      <a href="#intro">{tr('Intro')}</a>
+      <a href="#surface">{tr('Surface')}</a>
+      <a href="#pores">{tr('Pores')}</a>
       <a href="#pp0">P/P₀</a>
-      <a href="#sequence">Adsorption</a>
-      <a href="#conclusion">Conclusion</a>
+      <a href="#sequence">{tr('Adsorption')}</a>
+      <a href="#conclusion">{tr('Conclusion')}</a>
+      <div className="languageSwitcher" aria-label="Language selector">
+        <button
+          type="button"
+          className={language === 'fr' ? 'active' : ''}
+          onClick={() => setLanguage('fr')}
+        >
+          🇫🇷 FR
+        </button>
+        <button
+          type="button"
+          className={language === 'en' ? 'active' : ''}
+          onClick={() => setLanguage('en')}
+        >
+          🇺🇸 EN
+        </button>
+      </div>
     </nav>
   )
 }
@@ -314,11 +480,13 @@ function InfoCard({ title, text, type }) {
 }
 
 function PoreTypes() {
+  const { tr } = useLanguage()
+
   return (
     <div className="poreTypes">
-      <PoreType name="Micropore" size="< 2 nm" type="micro" text="Pore très étroit." />
-      <PoreType name="Mésopore" size="2 à 50 nm" type="meso" text="Pore de taille intermédiaire." />
-      <PoreType name="Macropore" size="> 50 nm" type="macro" text="Grande cavité." />
+      <PoreType name={tr('Micropore')} size="< 2 nm" type="micro" text={tr('Pore très étroit.')} />
+      <PoreType name={tr('Mésopore')} size="2 à 50 nm" type="meso" text={tr('Pore de taille intermédiaire.')} />
+      <PoreType name={tr('Macropore')} size="> 50 nm" type="macro" text={tr('Grande cavité.')} />
     </div>
   )
 }
@@ -345,6 +513,7 @@ function PoreType({ name, size, type, text }) {
 }
 
 function PP0Simulator() {
+  const { tr } = useLanguage()
   const [value, setValue] = useState(0)
   const p = value / 100
 
@@ -352,27 +521,27 @@ function PP0Simulator() {
   const mesoFill = clamp((p - 0.11) / 0.70, 0, 1) * 100
   const macroFill = clamp((p - 0.75) / 0.30, 0, 1) * 60
 
-  let state = 'Pression nulle'
-  let explanation = 'Aucune molécule d’azote n’est adsorbée. La surface du matériau est libre.'
+  let state = tr('Pression nulle')
+  let explanation = tr('Aucune molécule d’azote n’est adsorbée. La surface du matériau est libre.')
 
   if (p >= 0.01 && p < 0.11) {
-    state = 'Micropores'
-    explanation = 'À très faible P/P₀, les micropores commencent déjà à se remplir.'
+    state = tr('Micropores')
+    explanation = tr('À très faible P/P₀, les micropores commencent déjà à se remplir.')
   }
 
   if (p >= 0.11 && p < 0.55) {
-    state = 'Adsorption progressive'
-    explanation = 'Les micropores sont largement remplis. Les mésopores commencent à se remplir à leur tour.'
+    state = tr('Adsorption progressive')
+    explanation = tr('Les micropores sont largement remplis. Les mésopores commencent à se remplir à leur tour.')
   }
 
   if (p >= 0.55 && p < 0.85) {
-    state = 'Condensation capillaire'
-    explanation = 'Les mésopores peuvent se remplir plus fortement par condensation capillaire.'
+    state = tr('Condensation capillaire')
+    explanation = tr('Les mésopores peuvent se remplir plus fortement par condensation capillaire.')
   }
 
   if (p >= 0.85) {
-    state = 'Proche de la saturation'
-    explanation = 'À l’approche de la saturation, l’azote atteint progressivement les plus grandes cavités du matériau.'
+    state = tr('Proche de la saturation')
+    explanation = tr('À l’approche de la saturation, l’azote atteint progressivement les plus grandes cavités du matériau.')
   }
 
   return (
@@ -419,6 +588,7 @@ function PoreShape({ className, fill }) {
 }
 
 function AdsorptionSequence() {
+  const { tr } = useLanguage()
   const [step, setStep] = useState(0)
   const [replayKey, setReplayKey] = useState(0)
   const sequenceRef = useRef(null)
@@ -443,20 +613,20 @@ function AdsorptionSequence() {
 
   const steps = [
     {
-      title: '1. Remplissage des micropores',
-      text: 'Les micropores se remplissent en premier : c’est un remplissage de volume très étroit. (environ P/P0 = 0,1)',
+      title: tr('1. Remplissage des micropores'),
+      text: tr('Les micropores se remplissent en premier : c’est un remplissage de volume très étroit. (environ P/P0 = 0,1)'),
     },
     {
-      title: '2. Monocouche',
-      text: 'Une première couche d’azote se forme sur les parois internes accessibles. C’est a ce moment là que nous relevont la BET. (environ P/P0 = 0,3)',
+      title: tr('2. Monocouche'),
+      text: tr('Une première couche d’azote se forme sur les parois internes accessibles. C’est a ce moment là que nous relevont la BET. (environ P/P0 = 0,3)'),
     },
     {
-      title: '3. Multicouche',
-      text: 'À mesure que l’adsorption progresse, les molécules d’azote s’empilent et forment plusieurs couches sur la surface du matériau.',
+      title: tr('3. Multicouche'),
+      text: tr('À mesure que l’adsorption progresse, les molécules d’azote s’empilent et forment plusieurs couches sur la surface du matériau.'),
     },
     {
-      title: '4. Condensation capillaire',
-      text: 'À l’approche de la pression de saturation, l’azote commence à se condenser dans les pores. La porosité accessible se remplit progressivement jusqu’à permettre l’estimation du volume poreux total. (environ P/P₀ = 0,995)',
+      title: tr('4. Condensation capillaire'),
+      text: tr('À l’approche de la pression de saturation, l’azote commence à se condenser dans les pores. La porosité accessible se remplit progressivement jusqu’à permettre l’estimation du volume poreux total. (environ P/P₀ = 0,995)'),
     },
   ]
 
@@ -473,17 +643,17 @@ function AdsorptionSequence() {
           onChange={(e) => setStep(Number(e.target.value))}
         />
 
-        <div className="state">Étape {step + 1}/4</div>
+        <div className="state">{tr('Étape')} {step + 1}/4</div>
         <p>{steps[step].text}</p>
       </div>
 
       <div key={`${step}-${replayKey}`} className={`cleanSequence step${step}`}>
         <div className="seqTitle">
   {step === 0
-    ? 'Vue simplifiée dans un micropore'
+    ? tr('Vue simplifiée dans un micropore')
     : step === 3
-    ? 'Vue simplifiée dans un macropore'
-    : 'Vue simplifiée dans un mésopore'}
+    ? tr('Vue simplifiée dans un macropore')
+    : tr('Vue simplifiée dans un mésopore')}
 </div>
 
         <div className="seqPore">
@@ -571,7 +741,7 @@ function AdsorptionSequence() {
         </div>
 
         <div className="seqCaption">
-          Micropore → monocouche → multicouche → condensation de l'azote
+          {tr("Micropore → monocouche → multicouche → condensation de l'azote")}
         </div>
       </div>
     </div>
@@ -579,6 +749,7 @@ function AdsorptionSequence() {
 }
 
 function CapillaryCondensation() {
+  const { tr } = useLanguage()
   const [value, setValue] = useState(4)
   const p = value / 100
 
@@ -587,27 +758,27 @@ function CapillaryCondensation() {
   const liquid = p < 0.68 ? 0 : clamp((p - 0.68) / 0.24, 0, 1) * 82
   const macroLimit = p < 0.96 ? 0 : clamp((p - 0.96) / 0.04, 0, 1) * 55
 
-  let state = 'Gaz dominant'
-  let text = 'À très faible P/P₀, l’azote est surtout gazeux. Le mésopore n’est pas encore recouvert.'
+  let state = tr('Gaz dominant')
+  let text = tr('À très faible P/P₀, l’azote est surtout gazeux. Le mésopore n’est pas encore recouvert.')
 
   if (p >= 0.22 && p < 0.42) {
-    state = 'Monocouche'
-    text = 'Une première couche apparaît sur les parois internes du mésopore.'
+    state = tr('Monocouche')
+    text = tr('Une première couche apparaît sur les parois internes du mésopore.')
   }
 
   if (p >= 0.42 && p < 0.68) {
-    state = 'Multicouche'
-    text = 'Plusieurs couches se forment avant la condensation capillaire.'
+    state = tr('Multicouche')
+    text = tr('Plusieurs couches se forment avant la condensation capillaire.')
   }
 
   if (p >= 0.68 && p < 0.96) {
-    state = 'Condensation capillaire'
-    text = 'Le centre du mésopore se remplit : une phase condensée apparaît.'
+    state = tr('Condensation capillaire')
+    text = tr('Le centre du mésopore se remplit : une phase condensée apparaît.')
   }
 
   if (p >= 0.96) {
-    state = 'Cas limite macropore'
-    text = 'Très proche de P/P₀ = 1, les plus petits macropores peuvent commencer à se remplir.'
+    state = tr('Cas limite macropore')
+    text = tr('Très proche de P/P₀ = 1, les plus petits macropores peuvent commencer à se remplir.')
   }
 
   return (
@@ -626,7 +797,7 @@ function CapillaryCondensation() {
       </div>
 
       <div className="cleanCapillary">
-        <div className="capTitle">Mésopore : monocouche → multicouche → condensation</div>
+        <div className="capTitle">{tr('Mésopore : monocouche → multicouche → condensation')}</div>
 
         <div className="capPore">
           <div className="capWall left" />
@@ -659,7 +830,7 @@ function CapillaryCondensation() {
         </div>
 
         <div className="smallMacro">
-          <span>Petit macropore<br />cas limite près de 1</span>
+          <span>{tr('Petit macropore\ncas limite près de 1').split('\n')[0]}<br />{tr('Petit macropore\ncas limite près de 1').split('\n')[1]}</span>
           <div className="smallMacroTube">
             <motion.div
               className="smallMacroFill"
@@ -674,6 +845,7 @@ function CapillaryCondensation() {
 }
 
 function BETConclusion() {
+  const { tr } = useLanguage()
   const [paused, setPaused] = useState(false)
   const [replayKey, setReplayKey] = useState(0)
   const conclusionRef = useRef(null)
@@ -721,7 +893,7 @@ function BETConclusion() {
   className="conclusionPauseButton"
   type="button"
   onClick={() => setPaused(!paused)}
-  aria-label={paused ? 'Reprendre l’animation' : 'Mettre l’animation en pause'}
+  aria-label={paused ? tr('Reprendre l’animation') : tr('Mettre l’animation en pause')}
 >
   {paused ? '▶' : '⏸'}
 </button>
@@ -794,12 +966,12 @@ function BETConclusion() {
             </text>
           </svg>
 
-          <div className="sceneLabel limited">Surface accessible limitée</div>
-          <div className="sceneLabel internal">Surface interne accessible</div>
+          <div className="sceneLabel limited">{tr('Surface accessible limitée')}</div>
+          <div className="sceneLabel internal">{tr('Surface interne accessible')}</div>
         </div>
 
         <p>
-          Plus les molécules accèdent à des surfaces internes, plus la surface BET calculée augmente.
+          {tr('Plus les molécules accèdent à des surfaces internes, plus la surface BET calculée augmente.')}
         </p>
       </div>
     </div>
@@ -807,6 +979,8 @@ function BETConclusion() {
 }
 
 function EnergyVisual() {
+  const { tr } = useLanguage()
+
   return (
     <div className="energyBox">
       <div className="wall left" />
@@ -827,7 +1001,7 @@ function EnergyVisual() {
         transition={{ duration: 1.6, repeat: Infinity }}
       />
       <p>
-        Dans un micropore, deux parois proches attirent la molécule en même temps.
+        {tr('Dans un micropore, deux parois proches attirent la molécule en même temps.')}
       </p>
     </div>
   )
@@ -838,27 +1012,27 @@ function clamp(value, min, max) {
 }
 
 function EquipementsPage() {
+  const { tr } = useLanguage()
+
   return (
     <main className="page">
       <GlobalNitrogen />
 
       <Link className="backButton" to="/determinations">
-        ← Retour
+        {tr('← Retour')}
       </Link>
 
       <section className="section">
         <TextCard
-          title="Des équipements adaptés à chaque niveau de caractérisation."
+          title={tr('Des équipements adaptés à chaque niveau de caractérisation.')}
         >
           <p>
-            Chaque analyse d’adsorption d’azote nécessite un équipement adapté à la précision recherchée.
-            Notre laboratoire dispose de plusieurs instruments complémentaires permettant de réaliser des mesures de surface spécifique,
-            de volume poreux total et de microporosité.
+            {tr('Chaque analyse d’adsorption d’azote nécessite un équipement adapté à la précision recherchée. Notre laboratoire dispose de plusieurs instruments complémentaires permettant de réaliser des mesures de surface spécifique, de volume poreux total et de microporosité.')}
           </p>
         </TextCard>
 
         <div className="pageBadge">
-          Nos appareils de mesure
+          {tr('Nos appareils de mesure')}
         </div>
 
         <div className="equipmentCompareCard">
@@ -872,71 +1046,71 @@ function EquipementsPage() {
     <DeviceRange
       name="ASAP 2420"
       className="asap2420"
-      text="L’ASAP 2420 est principalement dédié aux analyses de routine et à la détermination des BET. Cet instrument est privilégié pour les échantillons susceptibles de contenir des composés pouvant polluer le circuit d’analyse, notamment certains produits chlorés ou issus d’unités de raffinage."
+      text={tr("L’ASAP 2420 est principalement dédié aux analyses de routine et à la détermination des BET. Cet instrument est privilégié pour les échantillons susceptibles de contenir des composés pouvant polluer le circuit d’analyse, notamment certains produits chlorés ou issus d’unités de raffinage.")}
     />
 
     <DeviceRange
       name="ASAP 2425"
       className="asap2425"
-      text="Plus récent, l’ASAP 2425 offre de meilleures performances à faible P/P₀. Il est utilisé pour la détermination des BET, VPT ainsi que pour les isothermes nécessitant une visibilité sur la fin de la microporosité. Cet instrument est réservé aux produits ne présentant aucun risque de pollution."
+      text={tr("Plus récent, l’ASAP 2425 offre de meilleures performances à faible P/P₀. Il est utilisé pour la détermination des BET, VPT ainsi que pour les isothermes nécessitant une visibilité sur la fin de la microporosité. Cet instrument est réservé aux produits ne présentant aucun risque de pollution.")}
     />
 
     <DeviceRange
       name="3Flex"
       className="threeFlex"
-      text="Cet appareil de haute précision, capable d’atteindre des vides très profonds, est principalement utilisé pour l’analyse micropore afin d’avoir une visibilité totale de la zone microporeuse."
+      text={tr("Cet appareil de haute précision, capable d’atteindre des vides très profonds, est principalement utilisé pour l’analyse micropore afin d’avoir une visibilité totale de la zone microporeuse.")}
     />
   </div>
 
   <p className="deviceHint">
-    Survolez un appareil pour afficher ses caractéristiques
+    {tr('Survolez un appareil pour afficher ses caractéristiques')}
   </p>
 </div>
 
         <div className="pageBadge">
-          Contrôle qualité
+          {tr('Contrôle qualité')}
         </div>
 
         <div className="qualityCard determinationCard">
           <p>
-            Les performances de nos instruments sont régulièrement contrôlées à l’aide de références certifiées Micromeritics afin de garantir la justesse et la reproductibilité des résultats.
+            {tr('Les performances de nos instruments sont régulièrement contrôlées à l’aide de références certifiées Micromeritics afin de garantir la justesse et la reproductibilité des résultats.')}
           </p>
         
         </div>
 
         <div className="pageBadge">
-          Nos équipements
+          {tr('Nos équipements')}
         </div>
 
         <div className="equipmentGrid">
           <EquipmentItem
-            title="Smart VacPrep"
-            text="Dégazage sous vide de 6 échantillons simultanément, capable d’atteindre 450 °C et des niveaux de vide très profonds grâce à sa pompe turbomoléculaire."
+            title={tr("Smart VacPrep")}
+            text={tr("Dégazage sous vide de 6 échantillons simultanément, capable d’atteindre 450 °C et des niveaux de vide très profonds grâce à sa pompe turbomoléculaire.")}
           />
 
           <EquipmentItem
-            title="Pompe à vide hydraulique"
-            text="Production du vide primaire utilisé lors des opérations de dégazage et d'analyse sur l'ASAP 2420."
+            title={tr("Pompe à vide hydraulique")}
+            text={tr("Production du vide primaire utilisé lors des opérations de dégazage et d'analyse sur l'ASAP 2420.")}
           />
 
           <EquipmentItem
-            title="Pompe à vide à membrane"
-            text="Production d’un vide primaire, propre et sans huile pour les opérations de dégazage et d'analyse sur l'ASAP 2425, Smart VacPrep et 3Flex."
+            title={tr("Pompe à vide à membrane")}
+            text={tr("Production d’un vide primaire, propre et sans huile pour les opérations de dégazage et d'analyse sur l'ASAP 2425, Smart VacPrep et 3Flex.")}
           />
 
           <EquipmentItem
-            title="Pompe à vide turbomoléculaire"
-            text="Obtention d’un vide secondaire très poussé indispensable aux analyses de haute précision. Ce type de pompe est utilisé sur l'ASAP 2425, Smart VacPrep et 3Flex."
+            title={tr("Pompe à vide turbomoléculaire")}
+            text={tr("Obtention d’un vide secondaire très poussé indispensable aux analyses de haute précision. Ce type de pompe est utilisé sur l'ASAP 2425, Smart VacPrep et 3Flex.")}
           />
 
           <EquipmentItem
-            title="Balance de précision 0,0001 g"
-            text="Pesée précise des échantillons afin de garantir la fiabilité des résultats."
+            title={tr("Balance de précision 0,0001 g")}
+            text={tr("Pesée précise des échantillons afin de garantir la fiabilité des résultats.")}
           />
 
           <EquipmentItem
-            title="Unité antistatique"
-            text="Réduction des charges électrostatiques susceptibles d’influencer les opérations de pesée."
+            title={tr("Unité antistatique")}
+            text={tr("Réduction des charges électrostatiques susceptibles d’influencer les opérations de pesée.")}
           />
         </div>
       </section>
@@ -982,50 +1156,50 @@ function EquipmentItem({ title, text }) {
 export default App
 
 function DeterminationsPage() {
+  const { tr } = useLanguage()
+
   return (
     <main className="page">
       <GlobalNitrogen />
 
       <Link className="backButton" to="/">
-        ← Retour
+        {tr('← Retour')}
       </Link>
 
       <section className="section">
         <TextCard
-          title="Que peut-on déterminer avec une analyse d'adsorption à l'azote ?"
+          title={tr("Que peut-on déterminer avec une analyse d'adsorption à l'azote ?")}
         >
           <p>
-              L’adsorption d’azote ne sert pas uniquement à mesurer la surface spécifique BET.
-              Différentes zones de l’isotherme permettent également d’obtenir des informations
-              complémentaires sur la porosité du matériau analysé.
+              {tr("L’adsorption d’azote ne sert pas uniquement à mesurer la surface spécifique BET. Différentes zones de l’isotherme permettent également d’obtenir des informations complémentaires sur la porosité du matériau analysé.")}
           </p>
         </TextCard>
 
         <div className="determinationGrid">
           <DeterminationCard
-            title="Surface BET"
-            text="Dans cette zone de l’isotherme, les molécules d’azote recouvrent progressivement la surface du matériau sous forme de monocouche. L’analyse de cinq points de mesure permet alors de calculer la surface spécifique BET."
-            highlight="Zone BET : environ P/P₀ = 0,05 à 0,30"
+            title={tr("Surface BET")}
+            text={tr("Dans cette zone de l’isotherme, les molécules d’azote recouvrent progressivement la surface du matériau sous forme de monocouche. L’analyse de cinq points de mesure permet alors de calculer la surface spécifique BET.")}
+            highlight={tr("Zone BET : environ P/P₀ = 0,05 à 0,30")}
             type="bet"
           />
 
           <DeterminationCard
-            title="Volume poreux total"
-            text="Lorsque P/P0 s'approche de 1, l’azote remplit progressivement l’ensemble de la porosité. La quantité totale de gaz adsorbée permet alors d’estimer le volume poreux total du matériau."
-            highlight="Lecture proche de P/P₀ = 1"
+            title={tr("Volume poreux total")}
+            text={tr("Lorsque P/P0 s'approche de 1, l’azote remplit progressivement l’ensemble de la porosité. La quantité totale de gaz adsorbée permet alors d’estimer le volume poreux total du matériau.")}
+            highlight={tr("Lecture proche de P/P₀ = 1")}
             type="volume"
           />
 
           <DeterminationCard
-            title="Isotherme"
-            text="Au-delà de la surface spécifique BET et du volume poreux total, l’analyse de l’isotherme complet apporte des informations précieuses, notamment sur la répartition de la porosité, la taille et la forme des pores."
-            highlight="Adsorption et désorption"
+            title={tr("Isotherme")}
+            text={tr("Au-delà de la surface spécifique BET et du volume poreux total, l’analyse de l’isotherme complet apporte des informations précieuses, notamment sur la répartition de la porosité, la taille et la forme des pores.")}
+            highlight={tr("Adsorption et désorption")}
             type="isotherm"
           />
           <DeterminationCard
-            title="Micropore"
-            text="La microporosité s’observe à très faible P/P₀. Une forte adsorption dès les basses pressions indique la présence de pores très étroits. Sa mesure requiert une excellente précision de mesure et peut considérablement allonger la durée de l’analyse."
-            highlight="Zone micropore : P/P0 < 0,1"
+            title={tr("Micropore")}
+            text={tr("La microporosité s’observe à très faible P/P₀. Une forte adsorption dès les basses pressions indique la présence de pores très étroits. Sa mesure requiert une excellente précision de mesure et peut considérablement allonger la durée de l’analyse.")}
+            highlight={tr("Zone micropore : P/P0 < 0,1")}
             type="micro"
           />
         </div>
@@ -1035,6 +1209,7 @@ function DeterminationsPage() {
 }
 
 function DeterminationCard({ title, text, highlight, type }) {
+  const { tr } = useLanguage()
   const [paused, setPaused] = useState(false)
 
   return (
@@ -1042,7 +1217,7 @@ function DeterminationCard({ title, text, highlight, type }) {
       <button
         className="graphPauseButton"
         onClick={() => setPaused(!paused)}
-        aria-label={paused ? 'Reprendre animation' : 'Mettre en pause'}
+        aria-label={paused ? tr('Reprendre animation') : tr('Mettre en pause')}
       >
         {paused ? '▶' : '⏸'}
       </button>
@@ -1057,7 +1232,7 @@ function DeterminationCard({ title, text, highlight, type }) {
       {type === 'micro' && (
       <div className="equipmentButtonWrapper">
       <Link className="nextPageButton" to="/equipements">
-      Découvrez nos appareils de mesure et équipements
+      {tr("Découvrez nos appareils de mesure et équipements")}
     </Link>
   </div>
 )}
@@ -1066,6 +1241,7 @@ function DeterminationCard({ title, text, highlight, type }) {
 }
 
 function AnimatedGraph({ type, paused = false }) {
+const { tr } = useLanguage()
 const adsorptionPath =
 type === 'micro'
     ? 'M40 182 C40 120, 42 110, 55 108 C75 108, 95 108, 118 108 C170 108, 210 108, 226 72 C242 38, 266 36, 290 34'
@@ -1135,7 +1311,7 @@ const desorptionPath =
   y="108"
   className="graphAxisLabel graphAxisLabelY"
 >
-  Quantité adsorbée
+  {tr('Quantité adsorbée')}
 </text>
     </svg>
   )
