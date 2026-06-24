@@ -654,66 +654,76 @@ function CapillaryCondensation() {
 }
 
 function BETConclusion() {
-  const [level, setLevel] = useState(0)
-
-  const steps = [
-    {
-      label: 'Compact',
-      value: 2,
-      text: 'Peu de surface accessible.',
-    },
-    {
-      label: 'Poreux',
-      value: 85,
-      text: 'Les pores ajoutent de la surface interne.',
-    },
-    {
-      label: 'Très poreux',
-      value: 250,
-      text: 'L’azote atteint beaucoup plus de parois.',
-    },
-    {
-      label: 'Énormément poreux',
-      value: 500,
-      text: 'La surface accessible devient immense.',
-    },
-  ]
-
-  const current = steps[level]
-
   return (
-    <div className="betVisual">
-      <div className={`betParticle betLevel${level}`}>
-<span className="betPore p1" />
-<span className="betPore p2" />
-<span className="betPore p3" />
-<span className="betPore p4" />
-<span className="betPore p5" />
+    <div className="betSummaryCard">
+      <div className="surfaceSceneSvg">
+        <svg viewBox="0 0 420 300" className="betSurfaceSvg">
+          <path
+            className="surfacePath smoothSurface"
+            d="M55 185 C115 95, 305 95, 365 185"
+          />
 
-<span className="betPore p6" />
-<span className="betPore p7" />
+          <path
+            className="surfacePath porousSurface"
+            d="M55 185 C92 130, 132 112, 168 118
+               C182 122, 188 138, 184 154
+               C178 178, 164 192, 172 204
+               C184 222, 214 220, 226 202
+               C238 184, 224 162, 232 144
+               C242 122, 278 120, 302 134
+               C326 148, 348 166, 365 185"
+          />
 
-<span className="betPore p8" />
-<span className="betPore p9" />
+<g className="smoothMolecules">
+  <circle cx="74" cy="145" r="6.5" />
+  <circle cx="94" cy="126" r="6.5" />
+  <circle cx="116" cy="111" r="6.5" />
+  <circle cx="141" cy="100" r="6.5" />
+  <circle cx="168" cy="94" r="6.5" />
+  <circle cx="197" cy="91" r="6.5" />
+  <circle cx="226" cy="94" r="6.5" />
+  <circle cx="254" cy="101" r="6.5" />
+  <circle cx="281" cy="113" r="6.5" />
+  <circle cx="306" cy="130" r="6.5" />
+  <circle cx="328" cy="151" r="6.5" />
+</g>
 
-        {Array.from({ length: 30 }).map((_, i) => (
-          <span key={i} className={`betNitrogen n${i}`} />
-        ))}
+<g className="porousMolecules">
+  <circle cx="74" cy="145" r="6.5" />
+  <circle cx="94" cy="126" r="6.5" />
+  <circle cx="116" cy="111" r="6.5" />
+  <circle cx="140" cy="101" r="6.5" />
+
+  <circle cx="165" cy="109" r="6.5" />
+  <circle cx="177" cy="133" r="6.5" />
+  <circle cx="177" cy="160" r="6.5" />
+  <circle cx="168" cy="188" r="6.5" />
+
+  <circle cx="187" cy="216" r="6.5" />
+  <circle cx="214" cy="218" r="6.5" />
+
+  <circle cx="234" cy="187" r="6.5" />
+  <circle cx="236" cy="158" r="6.5" />
+  <circle cx="245" cy="134" r="6.5" />
+
+  <circle cx="267" cy="115" r="6.5" />
+  <circle cx="296" cy="121" r="6.5" />
+  <circle cx="322" cy="141" r="6.5" />
+  <circle cx="347" cy="163" r="6.5" />
+</g>
+
+          <text x="210" y="285" textAnchor="middle" className="betUpText">
+  BET ↑
+</text>
+        </svg>
+
+        <div className="sceneLabel limited">Surface accessible limitée</div>
+        <div className="sceneLabel internal">Surface interne accessible</div>
       </div>
 
-      <div className="betCounter">
-        <span>{current.label}</span>
-        <strong>{current.value} m²/g</strong>
-        <p>{current.text}</p>
-
-        <input
-          type="range"
-          min="0"
-          max="3"
-          value={level}
-          onChange={(e) => setLevel(Number(e.target.value))}
-        />
-      </div>
+      <p>
+        Plus l’azote atteint de parois internes, plus la surface spécifique calculée est élevée.
+      </p>
     </div>
   )
 }
