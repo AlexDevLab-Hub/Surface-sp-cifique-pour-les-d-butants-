@@ -2871,10 +2871,8 @@ body {
 
 .languageSwitcher {
   position: fixed;
-
-  top: 2px;
-  right: -800px;
-
+  top: 24px;
+  right: 20px;
   z-index: 150;
 
   display: flex;
@@ -2887,6 +2885,10 @@ body {
 
   background: rgba(2,6,23,0.72);
   backdrop-filter: blur(18px);
+
+  box-shadow:
+    0 0 0 1px rgba(96,165,250,0.08),
+    0 0 28px rgba(96,165,250,0.12);
 }
 
 .languageSwitcher button {
@@ -2942,9 +2944,11 @@ body {
 
 @media (max-width: 560px) {
   .languageSwitcher {
-    position: absolute;
-    top: 16px;
-    right: 16px;
+    position: fixed;
+    top: 14px;
+    right: 14px;
+    padding: 6px;
+    gap: 6px;
   }
 
   .languageSwitcher button {

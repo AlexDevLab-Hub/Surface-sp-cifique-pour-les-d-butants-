@@ -163,7 +163,7 @@ function ScrollToTop() {
 }
 
 function HomePage() {
-  const { tr } = useLanguage()
+  const { language, setLanguage, tr } = useLanguage()
 
   useEffect(() => {
     if ('scrollRestoration' in history) {
@@ -177,6 +177,22 @@ function HomePage() {
     <main className="page">
       <GlobalNitrogen />
       <Nav />
+
+    <div className="languageSwitcher">
+  <button
+    className={language === 'fr' ? 'active' : ''}
+    onClick={() => setLanguage('fr')}
+  >
+    🇫🇷 FR
+  </button>
+
+  <button
+    className={language === 'en' ? 'active' : ''}
+    onClick={() => setLanguage('en')}
+  >
+    🇺🇸 EN
+  </button>
+</div>
 
       <section id="intro" className="section hero heroFull">
   <NitrogenField />
@@ -359,22 +375,6 @@ function Nav() {
       <a href="#pp0">P/P₀</a>
       <a href="#sequence">{tr('Adsorption')}</a>
       <a href="#conclusion">{tr('Conclusion')}</a>
-      <div className="languageSwitcher" aria-label="Language selector">
-        <button
-          type="button"
-          className={language === 'fr' ? 'active' : ''}
-          onClick={() => setLanguage('fr')}
-        >
-          🇫🇷 FR
-        </button>
-        <button
-          type="button"
-          className={language === 'en' ? 'active' : ''}
-          onClick={() => setLanguage('en')}
-        >
-          🇺🇸 EN
-        </button>
-      </div>
     </nav>
   )
 }
