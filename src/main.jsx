@@ -6,8 +6,8 @@ import './index.css'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <BrowserRouter>
-      <App />
+    <BrowserRouter basename="/Surface-sp-cifique-pour-les-d-butants-">
+    <App />
     </BrowserRouter>
   </React.StrictMode>,
 )
