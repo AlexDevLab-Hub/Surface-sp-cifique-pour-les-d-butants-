@@ -21,6 +21,21 @@ const translations = {
     "La chauffe accélère la désorption des molécules encore retenues.": "Heating accelerates the desorption of molecules that are still retained.",
     "Combinée au vide, elle permet de nettoyer complètement la surface avant l’analyse.": "Combined with vacuum, it completely cleans the surface before analysis.",
     "Vue simplifiée du dégazage": "Simplified view of degassing",
+    "Cellule": "Cell",
+    "De l’azote gazeux à l’azote condensé": "From gaseous nitrogen to condensed nitrogen",
+    "Après le dégazage, l’analyse peut commencer. L’azote est introduit sous forme gazeuse dans la cellule et des molécules se fixent à la surface de l’échantillon : c’est l’adsorption. Le dewar monte ensuite pour refroidir le bulbe. Dans cette illustration, la saturation est atteinte et l’azote se condense à la surface du matériau.": "After degassing, the analysis can begin. Nitrogen is introduced into the cell as a gas and molecules attach to the sample surface: this is adsorption. The dewar then rises to cool the bulb. In this illustration, saturation is reached and nitrogen condenses on the material surface.",
+    "1. Cellule avant refroidissement": "1. Cell before cooling",
+    "La cellule d’analyse contient déjà l’échantillon solide, mais elle n’est pas encore plongée dans l’azote liquide. À ce stade, aucun azote condensé n’est présent dans le bulbe.": "The analysis cell already contains the solid sample, but it is not yet immersed in liquid nitrogen. At this stage, no condensed nitrogen is present in the bulb.",
+    "2. Introduction et adsorption": "2. Introduction and adsorption",
+    "L’azote est introduit sous forme gazeuse dans la cellule. Une partie des molécules se fixe à la surface de l’échantillon : c’est l’adsorption. Les autres restent en suspension dans la cellule.": "Nitrogen is introduced into the cell as a gas. Some molecules attach to the sample surface: this is adsorption. The others remain suspended in the cell.",
+    "3. Refroidissement et condensation": "3. Cooling and condensation",
+    "Le dewar monte et refroidit le bulbe. Dans le cas illustré, la saturation est atteinte : l’azote se condense à la surface du matériau et forme une couche plus dense autour de l’échantillon.": "The dewar rises and cools the bulb. In the illustrated case, saturation is reached: nitrogen condenses on the material surface and forms a denser layer around the sample.",
+    "Vue simplifiée de la cellule": "Simplified view of the cell",
+    "Échantillon solide": "Solid sample",
+    "Azote gazeux": "Gaseous nitrogen",
+    "Azote gazeux / adsorbé": "Gaseous / adsorbed nitrogen",
+    "Azote condensé": "Condensed nitrogen",
+    "Azote liquide · 77 K": "Liquid nitrogen · 77 K",
     "Adsorption": "Adsorption",
     "Conclusion": "Conclusion",
     "Comprendre l'adsorption d'azote": "Understanding nitrogen adsorption",
@@ -283,6 +298,16 @@ function HomePage() {
         <DegassingSequence />
       </section>
 
+      <section id="nitrogen-cell" className="section">
+        <TextCard title={tr('De l’azote gazeux à l’azote condensé')}>
+          <p>
+            {tr('Après le dégazage, l’analyse peut commencer. L’azote est introduit sous forme gazeuse dans la cellule et des molécules se fixent à la surface de l’échantillon : c’est l’adsorption. Le dewar monte ensuite pour refroidir le bulbe. Dans cette illustration, la saturation est atteinte et l’azote se condense à la surface du matériau.')}
+          </p>
+        </TextCard>
+
+        <NitrogenCellSequence />
+      </section>
+
       <section id="pp0" className="section">
         <TextCard
           badge={tr('3. P/P₀')}
@@ -396,6 +421,7 @@ function Nav() {
       <a href="#surface">{tr('Surface')}</a>
       <a href="#pores">{tr('Pores')}</a>
       <a href="#degassing">{tr('Dégazage')}</a>
+      <a href="#nitrogen-cell">{tr('Cellule')}</a>
       <a href="#pp0">P/P₀</a>
       <a href="#sequence">{tr('Adsorption')}</a>
       <a href="#conclusion">{tr('Conclusion')}</a>
@@ -920,6 +946,170 @@ function DegassingSequence() {
             <path d="M16 27 C26 20 6 16 16 8 M32 27 C42 20 22 16 32 8 M48 27 C58 20 38 16 48 8 M12 34 H52" />
           </svg>
         )}
+      </div>
+    </div>
+  )
+}
+
+const nitrogenCellOutline = 'M167 44 H193 V196 C193 215 207 223 220 235 C244 258 246 284 232 304 C220 324 200 332 180 332 C157 332 136 321 126 303 C112 280 117 254 139 235 C153 222 167 215 167 196 Z'
+const nitrogenGasSites = [
+  [175, 68], [185, 89], [174, 112], [184, 134], [176, 155], [184, 178],
+  [175, 199], [182, 218], [158, 239], [183, 242], [203, 244], [142, 257],
+  [164, 262], [185, 261], [213, 263], [134, 278], [153, 280], [177, 278],
+  [202, 282], [226, 282], [137, 295], [157, 301], [205, 304], [221, 296],
+  [148, 270], [165, 251], [196, 245], [211, 275],
+]
+// Adsorbed molecules form a first ring; the remaining gas joins a second layer.
+const nitrogenSurfaceSites = nitrogenGasSites.map((_, index) => {
+  const adsorbed = index >= 8 && index < 24
+  const freeIndex = index < 8 ? index : index - 16
+  const angle = adsorbed ? (index - 8) * Math.PI / 8 : freeIndex * Math.PI / 11
+  const radius = adsorbed ? 23 : 30
+  return { adsorbed, x: 180 + Math.cos(angle) * radius, y: 299 + Math.sin(angle) * radius }
+})
+
+function NitrogenCellSequence() {
+  const { tr } = useLanguage()
+  const [step, setStep] = useState(0)
+  const [replayKey, setReplayKey] = useState(0)
+  const [inView, setInView] = useState(false)
+  const sequenceRef = useRef(null)
+
+  useEffect(() => {
+    let wasVisible = false
+    const observer = new IntersectionObserver(([entry]) => {
+      const visible = entry.isIntersecting && entry.intersectionRatio >= 0.15
+      if (visible && !wasVisible) {
+        setStep(0)
+        setReplayKey((key) => key + 1)
+      }
+      wasVisible = visible
+      setInView(visible)
+    }, { threshold: 0.15 })
+    if (sequenceRef.current) observer.observe(sequenceRef.current)
+    return () => observer.disconnect()
+  }, [])
+
+  const steps = [
+    {
+      title: tr('1. Cellule avant refroidissement'),
+      text: tr('La cellule d’analyse contient déjà l’échantillon solide, mais elle n’est pas encore plongée dans l’azote liquide. À ce stade, aucun azote condensé n’est présent dans le bulbe.'),
+    },
+    {
+      title: tr('2. Introduction et adsorption'),
+      text: tr('L’azote est introduit sous forme gazeuse dans la cellule. Une partie des molécules se fixe à la surface de l’échantillon : c’est l’adsorption. Les autres restent en suspension dans la cellule.'),
+    },
+    {
+      title: tr('3. Refroidissement et condensation'),
+      text: tr('Le dewar monte et refroidit le bulbe. Dans le cas illustré, la saturation est atteinte : l’azote se condense à la surface du matériau et forme une couche plus dense autour de l’échantillon.'),
+    },
+  ]
+
+  return (
+    <div className="simGrid nitrogenCellGrid" ref={sequenceRef}>
+      <div className="controlPanel sequencePanel">
+        <label className="bigValue sequenceBigValue nitrogenCellTitle" htmlFor="nitrogen-cell-step">
+          {/* Shared grid cells reserve the longest copy without a fixed panel height. */}
+          {steps.map((item, index) => (
+            <span key={index} className={index === step ? 'active' : ''} aria-hidden={index !== step}>
+              {item.title}
+            </span>
+          ))}
+        </label>
+        <input
+          id="nitrogen-cell-step"
+          type="range"
+          min="0"
+          max="2"
+          step="1"
+          value={step}
+          aria-label={tr('Cellule')}
+          aria-valuetext={`${tr('Étape')} ${step + 1}/3 : ${steps[step].title}`}
+          onChange={(event) => setStep(Number(event.target.value))}
+        />
+        <div aria-live="polite">
+          <div className="state">{tr('Étape')} {step + 1}/3</div>
+          <div className="nitrogenCellCopy">
+            {steps.map((item, index) => (
+              <p key={index} className={index === step ? 'active' : ''} aria-hidden={index !== step}>
+                {item.text}
+              </p>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <div
+        className={`cleanSequence nitrogenCellVisual nitrogenCellStep${step} ${inView ? '' : 'nitrogenCellOffscreen'}`}
+        role="img"
+        aria-label={`${tr('Vue simplifiée de la cellule')} : ${steps[step].title}. ${steps[step].text}`}
+      >
+        <div className="seqTitle">{tr('Vue simplifiée de la cellule')}</div>
+        <div className="nitrogenCellDiagram" aria-hidden="true">
+          <svg viewBox="0 0 360 480" fill="none">
+            <defs>
+              <linearGradient id="nitrogen-cell-glass" x1="116" y1="0" x2="244" y2="0" gradientUnits="userSpaceOnUse">
+                <stop stopColor="#a5dcec" stopOpacity="0.16" />
+                <stop offset="0.5" stopColor="#dbeafe" stopOpacity="0.025" />
+                <stop offset="1" stopColor="#a5dcec" stopOpacity="0.14" />
+              </linearGradient>
+              <linearGradient id="nitrogen-cell-bath" x1="180" y1="376" x2="180" y2="461" gradientUnits="userSpaceOnUse">
+                <stop stopColor="#7dd3fc" stopOpacity="0.18" />
+                <stop offset="1" stopColor="#60a5fa" stopOpacity="0.05" />
+              </linearGradient>
+              <radialGradient id="nitrogen-cell-sample" cx="0.35" cy="0.3" r="0.75">
+                <stop stopColor="#cbd5e1" />
+                <stop offset="1" stopColor="#64748b" />
+              </radialGradient>
+              <clipPath id="nitrogen-cell-interior"><path d={nitrogenCellOutline} /></clipPath>
+            </defs>
+
+            <g className="nitrogenCellDewar">
+              <path className="nitrogenDewarWall" d="M76 364 V437 Q76 465 104 465 H256 Q284 465 284 437 V364" />
+              <path fill="url(#nitrogen-cell-bath)" d="M86 379 H274 V437 Q274 455 255 455 H105 Q86 455 86 437 Z" />
+              <path className="nitrogenLiquidLevel" d="M86 379 Q132 375 180 379 T274 379" />
+              <path className="nitrogenDewarRim" d="M76 364 H284" />
+            </g>
+
+            <path className="nitrogenCellGlass" d={nitrogenCellOutline} fill="url(#nitrogen-cell-glass)" />
+            <path className="nitrogenCellRim" d="M163 44 H197" />
+            <g clipPath="url(#nitrogen-cell-interior)">
+              <circle className="nitrogenCondensedLayer" cx="180" cy="299" r="23" />
+              {step > 0 && (
+                <g key={`${step}-${replayKey}`} className="nitrogenCellParticles">
+                  {nitrogenGasSites.map(([gasX, gasY], index) => {
+                    const site = nitrogenSurfaceSites[index]
+                    const x = step === 2 && site.adsorbed ? site.x : gasX
+                    const y = step === 2 && site.adsorbed ? site.y : gasY
+                    return (
+                      <g
+                        key={index}
+                        className={`nitrogenCellParticle ${site.adsorbed ? 'adsorbed' : 'freeGas'}`}
+                        style={{
+                          '--fall-x': `${site.x - x}px`,
+                          '--fall-y': `${site.y - y}px`,
+                          '--fall-mid-y': `${(site.y - y) / 2}px`,
+                          '--adsorb-delay': `${0.15 + (index % 8) * 0.065}s`,
+                          '--condense-delay': `${1.35 + (index % 8) * 0.045}s`,
+                          '--drift-delay': `${-(index % 7) * 0.6}s`,
+                          '--drift-duration': `${3.8 + (index % 4) * 0.4}s`,
+                        }}
+                      >
+                        <circle cx={x} cy={y} r="3.2" />
+                      </g>
+                    )
+                  })}
+                </g>
+              )}
+              <circle className="nitrogenSolidSample" cx="180" cy="299" r="18" fill="url(#nitrogen-cell-sample)" />
+            </g>
+          </svg>
+        </div>
+        <div className="nitrogenCellLegend" aria-hidden="true">
+          <span><i className="nitrogenSampleKey" />{tr('Échantillon solide')}</span>
+          {step > 0 && <span><i className={`nitrogenParticleKey ${step === 2 ? 'condensed' : ''}`} />{tr(step === 2 ? 'Azote condensé' : 'Azote gazeux / adsorbé')}</span>}
+          <span><i className="nitrogenBathKey" />{tr('Azote liquide · 77 K')}</span>
+        </div>
       </div>
     </div>
   )

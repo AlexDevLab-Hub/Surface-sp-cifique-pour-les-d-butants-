@@ -2839,6 +2839,245 @@ body {
     0 0 20px rgba(96,165,250,0.18);
 }
 
+/* The cell sequence reuses the cards; its longest copy sets a stable grid row. */
+
+#nitrogen-cell {
+  scroll-margin-top: 90px;
+}
+
+.nitrogenCellGrid > * {
+  min-width: 0;
+}
+
+.nitrogenCellTitle,
+.nitrogenCellCopy {
+  display: grid;
+}
+
+.nitrogenCellTitle {
+  font-size: clamp(28px, 2.2vw, 32px);
+}
+
+.nitrogenCellTitle > span,
+.nitrogenCellCopy > p {
+  grid-area: 1 / 1;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.nitrogenCellTitle > .active,
+.nitrogenCellCopy > .active {
+  visibility: visible;
+  pointer-events: auto;
+}
+
+.nitrogenCellGrid > .controlPanel > * {
+  flex-shrink: 0;
+}
+
+.nitrogenCellVisual .seqTitle {
+  max-width: calc(100% - 36px);
+}
+
+.nitrogenCellDiagram {
+  position: absolute;
+  inset: 65px 16px 64px;
+}
+
+.nitrogenCellDiagram svg {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%);
+  width: 100%;
+  height: 100%;
+  max-height: 480px;
+  overflow: visible;
+}
+
+.nitrogenDewarWall {
+  fill: rgba(148, 163, 184, 0.055);
+  stroke: rgba(148, 197, 253, 0.42);
+  stroke-width: 2;
+}
+
+.nitrogenDewarRim,
+.nitrogenLiquidLevel,
+.nitrogenCellRim {
+  stroke: rgba(165, 220, 236, 0.6);
+  stroke-width: 1.5;
+  stroke-linecap: round;
+}
+
+.nitrogenCellGlass {
+  stroke: rgba(203, 213, 225, 0.7);
+  stroke-width: 1.6;
+}
+
+.nitrogenSolidSample {
+  stroke: rgba(226, 232, 240, 0.55);
+  stroke-width: 1;
+}
+
+.nitrogenCellParticle circle {
+  fill: #f8fafc;
+  filter: drop-shadow(0 0 3px rgba(219, 234, 254, 0.38));
+}
+
+.nitrogenCellStep1 .nitrogenCellParticle.freeGas circle {
+  animation: nitrogenGasDrift var(--drift-duration) ease-in-out var(--drift-delay) infinite alternate;
+}
+
+.nitrogenCellStep1 .nitrogenCellParticle.adsorbed {
+  animation: nitrogenCellAdsorb 2.1s cubic-bezier(0.4, 0, 0.2, 1) var(--adsorb-delay) forwards;
+  will-change: transform;
+}
+
+@keyframes nitrogenCellAdsorb {
+  from { transform: translate3d(0, 0, 0); }
+  to { transform: translate3d(var(--fall-x), var(--fall-y), 0); }
+}
+
+@keyframes nitrogenGasDrift {
+  from { transform: translate3d(-1.5px, -2px, 0); }
+  to { transform: translate3d(1.5px, 2px, 0); }
+}
+
+.nitrogenCellStep2 .nitrogenCellDewar {
+  animation: nitrogenDewarRise 1.2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+@keyframes nitrogenDewarRise {
+  from { transform: translate3d(0, 0, 0); }
+  to { transform: translate3d(0, -124px, 0); }
+}
+
+.nitrogenCellStep2 .nitrogenCellParticle.freeGas {
+  animation: nitrogenCellCondense 1.6s linear var(--condense-delay) forwards;
+  will-change: transform;
+}
+
+.nitrogenCellStep2 .nitrogenCellParticle circle {
+  animation: nitrogenCellTurnBlue 0.35s ease-out var(--condense-delay) forwards;
+}
+
+@keyframes nitrogenCellCondense {
+  from { transform: translate3d(0, 0, 0); }
+  50% { transform: translate3d(0, var(--fall-mid-y), 0); }
+  to { transform: translate3d(var(--fall-x), var(--fall-y), 0); }
+}
+
+@keyframes nitrogenCellTurnBlue {
+  from { fill: #f8fafc; }
+  to { fill: #60a5fa; }
+}
+
+.nitrogenCondensedLayer {
+  stroke: rgba(96, 165, 250, 0.18);
+  stroke-width: 8;
+  opacity: 0;
+}
+
+.nitrogenCellStep2 .nitrogenCondensedLayer {
+  animation: nitrogenLayerAppear 1.2s ease-out 1.35s forwards;
+}
+
+@keyframes nitrogenLayerAppear {
+  to { opacity: 1; }
+}
+
+.nitrogenCellLegend {
+  position: absolute;
+  bottom: 20px;
+  left: 16px;
+  right: 16px;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 8px 18px;
+  color: #dbeafe;
+  font-size: 12px;
+}
+
+.nitrogenCellLegend span {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.nitrogenCellLegend i {
+  display: inline-block;
+  flex-shrink: 0;
+  border-radius: 50%;
+}
+
+.nitrogenSampleKey {
+  width: 12px;
+  height: 12px;
+  background: #94a3b8;
+  border: 1px solid rgba(226, 232, 240, 0.55);
+}
+
+.nitrogenCellLegend .nitrogenBathKey {
+  width: 13px;
+  height: 8px;
+  border-radius: 3px;
+  border: 1px solid rgba(165, 220, 236, 0.6);
+  background: rgba(125, 211, 252, 0.18);
+}
+
+.nitrogenParticleKey {
+  width: 6px;
+  height: 6px;
+  background: #f8fafc;
+  box-shadow: 0 0 5px rgba(219, 234, 254, 0.3);
+}
+
+.nitrogenParticleKey.condensed {
+  animation: nitrogenLegendTurnBlue 0.35s ease-out 1.35s forwards;
+}
+
+@keyframes nitrogenLegendTurnBlue {
+  to { background: #60a5fa; }
+}
+
+.nitrogenCellOffscreen .nitrogenCellDewar,
+.nitrogenCellOffscreen .nitrogenCellParticle,
+.nitrogenCellOffscreen .nitrogenCellParticle circle,
+.nitrogenCellOffscreen .nitrogenCondensedLayer,
+.nitrogenCellOffscreen .nitrogenParticleKey {
+  animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nitrogenCellParticle,
+  .nitrogenCellParticle circle,
+  .nitrogenCellDewar,
+  .nitrogenCondensedLayer,
+  .nitrogenParticleKey.condensed {
+    animation: none !important;
+  }
+
+  .nitrogenCellStep2 .nitrogenCellDewar {
+    transform: translate3d(0, -124px, 0);
+  }
+
+  .nitrogenCellStep1 .nitrogenCellParticle.adsorbed,
+  .nitrogenCellStep2 .nitrogenCellParticle.freeGas {
+    transform: translate3d(var(--fall-x), var(--fall-y), 0);
+  }
+
+  .nitrogenCellStep2 .nitrogenCellParticle circle,
+  .nitrogenCellStep2 .nitrogenParticleKey.condensed {
+    fill: #60a5fa;
+    background: #60a5fa;
+  }
+
+  .nitrogenCellStep2 .nitrogenCondensedLayer {
+    opacity: 1;
+  }
+}
+
 /* Degassing shares the adsorption cards and walls; motion is scoped here. */
 
 #degassing {
