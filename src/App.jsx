@@ -778,7 +778,7 @@ const degassingParticles = ['left', 'right'].flatMap((side, sideIndex) =>
   degassingOccupiedSites.map((site, index) => ({
     id: `${side}-${site}`,
     side,
-    position: (site / 19) * 100,
+    position: site / 19,
     kind: (index + sideIndex) % 3,
     // Six of twenty-eight particles (21%) leave during vacuum alone.
     weaklyHeld: index === 2 || index === 7 || index === 12,
@@ -869,53 +869,57 @@ function DegassingSequence() {
         aria-label={`${tr('Vue simplifiée du dégazage')} : ${currentStep.title}`}
       >
         <div className="seqTitle">{tr('Vue simplifiée du dégazage')}</div>
-        <div key={`${step}-${replayKey}`} className="degassingScene" aria-hidden="true">
-          <div className="seqPore degassingPore">
-            <div className="seqWall left" />
-            <div className="seqWall right" />
+        <div className="seqPore" aria-hidden="true">
+          <div className="seqWall left" />
+          <div className="seqWall right" />
 
+          <div key={`${step}-${replayKey}`} className="degassingParticles">
             {['left', 'right'].map((side) => (
-              <div key={side} className={`degassingWallSites ${side}`}>
+              <div key={side} className={`seqMono degassingMono ${side}`}>
                 {degassingParticles.filter((particle) => particle.side === side).map((particle) => {
                   const evacuated = step === 2 && particle.weaklyHeld
                   const departing = !evacuated && (step === 2 || (step === 1 && particle.weaklyHeld))
                   return (
                     <span
                       key={particle.id}
-                      className={`degassingParticle ${evacuated ? 'evacuated' : departing ? 'departing' : ''}`}
+                      className={`degassingParticle contaminant${particle.kind} ${evacuated ? 'evacuated' : departing ? 'departing' : ''}`}
                       style={{
-                        top: `${particle.position}%`,
+                        '--site-position': particle.position,
                         '--escape-delay': `${particle.delay}s`,
                         '--escape-duration': `${particle.duration}s`,
                         '--escape-drift': `${particle.drift}px`,
                       }}
-                    >
-                      <span className={`degassingContaminant contaminant${particle.kind}`} />
-                    </span>
+                    />
                   )
                 })}
               </div>
             ))}
 
-            {step > 0 && (
-              <div className="degassingVacuum">
-                <svg viewBox="0 0 100 300" fill="none">
-                  <path
-                    className="degassingFlow"
-                    d="M50 280 C26 252 74 224 50 196 C26 168 74 140 50 112 C30 87 70 62 50 26"
-                  />
-                  <path className="degassingArrowHead" d="M37 40 L50 24 L63 40" />
-                </svg>
-              </div>
-            )}
           </div>
 
-          {step === 2 && (
-            <svg className="degassingHeat" viewBox="0 0 64 40" fill="none">
-              <path d="M16 27 C26 20 6 16 16 8 M32 27 C42 20 22 16 32 8 M48 27 C58 20 38 16 48 8 M12 34 H52" />
-            </svg>
+          {step > 0 && (
+            <div className="degassingVacuum">
+              <svg viewBox="0 0 48 320" preserveAspectRatio="none" fill="none">
+                <path
+                  className="degassingFlowLine"
+                  d="M24 302 C16 280 16 258 24 236 S32 192 24 170 S16 126 24 104 S32 60 24 20"
+                />
+                <path
+                  className="degassingFlowHighlight"
+                  pathLength="100"
+                  d="M24 302 C16 280 16 258 24 236 S32 192 24 170 S16 126 24 104 S32 60 24 20"
+                />
+                <path className="degassingArrowHead" d="M24 14 L20 23 L24 20 L28 23 Z" />
+              </svg>
+            </div>
           )}
         </div>
+
+        {step === 2 && (
+          <svg className="degassingHeat" viewBox="0 0 64 40" fill="none" aria-hidden="true">
+            <path d="M16 27 C26 20 6 16 16 8 M32 27 C42 20 22 16 32 8 M48 27 C58 20 38 16 48 8 M12 34 H52" />
+          </svg>
+        )}
       </div>
     </div>
   )

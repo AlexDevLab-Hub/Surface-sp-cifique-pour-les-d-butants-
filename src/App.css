@@ -2851,75 +2851,66 @@ body {
 
 .degassingVisual {
   --vacuum-color: #a5dcec;
+  /* Keep the inherited 520px visual independent of the changing text height. */
+  align-self: start;
 }
 
 .degassingVisual .seqTitle {
   max-width: calc(100% - 98px);
 }
 
-.degassingPore {
-  --wall-width: clamp(40px, 24%, 105px);
-  inset: 82px clamp(22px, 6vw, 64px) 40px;
+.degassingVisual .seqPore {
+  z-index: 1;
 }
 
-.degassingPore .seqWall {
-  width: var(--wall-width);
+.degassingVisual .seqWall {
+  animation: none;
+  transition: none;
 }
 
-.degassingWallSites {
+.degassingParticles {
   position: absolute;
-  top: 20px;
-  bottom: 20px;
-  width: 14px;
+  inset: 0;
   z-index: 2;
 }
 
-.degassingWallSites.left {
-  left: var(--wall-width);
-  transform: translateX(-50%);
+.degassingMono {
+  /* Position and particle diameter come from .seqMono and .seqMono span. */
+  width: 13px;
+  opacity: 1;
+  transition: none;
 }
 
-.degassingWallSites.right {
-  right: var(--wall-width);
-  transform: translateX(50%);
-}
-
-.degassingParticle {
+.degassingMono .degassingParticle {
   position: absolute;
+  top: calc((100% - 13px) * var(--site-position));
   left: 0;
-  width: 14px;
-  height: 14px;
-  margin-top: -7px;
 }
 
-.degassingContaminant {
-  display: block;
-  width: 100%;
-  height: 100%;
+.degassingMono .degassingParticle::before {
+  background: var(--contaminant-color);
   border: 1px solid rgba(255, 255, 255, 0.32);
-  box-shadow: 0 0 8px rgba(2, 6, 23, 0.35);
+  box-shadow: 0 0 10px var(--contaminant-glow);
 }
 
-.contaminant0 {
-  border-radius: 4px;
-  background: #cfad73;
-  transform: rotate(35deg) scale(0.85);
+.degassingParticle.contaminant0 {
+  --contaminant-color: #cfad73;
+  --contaminant-glow: rgba(207, 173, 115, 0.30);
 }
 
-.contaminant1 {
-  border-radius: 50% 50% 35% 35%;
-  background: #c496a4;
-  transform: scale(0.8, 1);
+.degassingParticle.contaminant1 {
+  --contaminant-color: #c496a4;
+  --contaminant-glow: rgba(196, 150, 164, 0.30);
 }
 
-.contaminant2 {
-  border-radius: 4px;
-  background: #a49cc9;
-  transform: rotate(-15deg) scale(0.85);
+.degassingParticle.contaminant2 {
+  --contaminant-color: #a49cc9;
+  --contaminant-glow: rgba(164, 156, 201, 0.30);
 }
 
 .degassingParticle.departing {
-  animation: degassingEscape var(--escape-duration) ease-in var(--escape-delay) forwards;
+  animation: degassingEscape var(--escape-duration) cubic-bezier(0.4, 0, 1, 1) var(--escape-delay) forwards;
+  will-change: transform, opacity;
 }
 
 .degassingParticle.evacuated {
@@ -2931,14 +2922,6 @@ body {
     transform: translate3d(0, 0, 0);
     opacity: 1;
   }
-  20% {
-    transform: translate3d(var(--escape-drift), -22px, 0);
-    opacity: 1;
-  }
-  65% {
-    transform: translate3d(calc(var(--escape-drift) * 0.55), -250px, 0);
-    opacity: 0.85;
-  }
   100% {
     transform: translate3d(var(--escape-drift), -540px, 0) scale(0.65);
     opacity: 0;
@@ -2947,41 +2930,48 @@ body {
 
 .degassingVacuum {
   position: absolute;
-  top: 4%;
+  top: 18px;
+  bottom: 18px;
   left: 50%;
-  width: 64px;
-  height: 92%;
+  width: 40px;
   transform: translateX(-50%);
   color: var(--vacuum-color);
+  pointer-events: none;
+  transition: color 0.4s ease;
 }
 
 .degassingVacuum svg {
   width: 100%;
   height: 100%;
   overflow: visible;
-  animation: degassingVacuumLift 2s ease-in-out infinite;
 }
 
-.degassingFlow,
-.degassingArrowHead {
+.degassingFlowLine,
+.degassingFlowHighlight {
   stroke: currentColor;
-  stroke-width: 3;
   stroke-linecap: round;
-  stroke-linejoin: round;
 }
 
-.degassingFlow {
-  stroke-dasharray: 18 12;
-  opacity: 0.75;
-  animation: degassingVacuumFlow 1.5s linear infinite;
+.degassingFlowLine {
+  stroke-width: 1.1;
+  opacity: 0.34;
 }
 
-@keyframes degassingVacuumFlow {
-  to { stroke-dashoffset: -60; }
+.degassingFlowHighlight {
+  stroke-width: 1.65;
+  stroke-dasharray: 14 86;
+  opacity: 0.88;
+  filter: drop-shadow(0 0 2px currentColor);
+  animation: degassingVacuumFlux 2.6s linear infinite;
 }
 
-@keyframes degassingVacuumLift {
-  50% { transform: translateY(-6px); opacity: 0.65; }
+.degassingArrowHead {
+  fill: currentColor;
+  opacity: 0.72;
+}
+
+@keyframes degassingVacuumFlux {
+  to { stroke-dashoffset: -100; }
 }
 
 .degassingVisual.heating {
@@ -3000,10 +2990,6 @@ body {
   animation: degassingWarmGlow 3s ease-in-out infinite;
 }
 
-.degassingVisual.heating .seqWall {
-  border-color: rgba(242, 154, 123, 0.28);
-}
-
 .degassingHeat {
   position: absolute;
   top: 18px;
@@ -3011,6 +2997,7 @@ body {
   width: 48px;
   height: 36px;
   color: #f29a7b;
+  z-index: 2;
 }
 
 .degassingHeat path {
@@ -3024,8 +3011,7 @@ body {
 }
 
 .degassingOffscreen .departing,
-.degassingOffscreen .degassingVacuum svg,
-.degassingOffscreen .degassingFlow,
+.degassingOffscreen .degassingFlowHighlight,
 .degassingOffscreen::after {
   animation-play-state: paused;
 }
@@ -3036,8 +3022,7 @@ body {
     opacity: 0;
   }
 
-  .degassingVacuum svg,
-  .degassingFlow,
+  .degassingFlowHighlight,
   .degassingVisual.heating::after {
     animation: none;
   }
