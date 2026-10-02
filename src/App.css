@@ -2849,6 +2849,18 @@ body {
   min-width: 0;
 }
 
+@media (min-width: 981px) {
+  .degassingGrid > .controlPanel {
+    /* Let the visual set the row height, independently of the active text. */
+    contain: size;
+    align-self: stretch;
+  }
+
+  .degassingGrid > .controlPanel > * {
+    flex-shrink: 0;
+  }
+}
+
 .degassingVisual {
   --vacuum-color: #a5dcec;
   /* Keep the inherited 520px visual independent of the changing text height. */
