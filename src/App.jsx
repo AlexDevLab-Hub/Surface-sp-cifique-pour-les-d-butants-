@@ -8,6 +8,19 @@ const translations = {
     "Intro": "Intro",
     "Surface": "Surface",
     "Pores": "Pores",
+    "Dégazage": "Degassing",
+    "Le dégazage : nettoyer la surface avant l’analyse": "Degassing: cleaning the surface before analysis",
+    "Avant toute analyse d’adsorption, l’échantillon doit être dégazé afin d’éliminer les molécules déjà présentes sur sa surface et dans sa porosité. Cette étape combine une mise sous vide et une chauffe contrôlée afin de libérer la surface avant l’introduction de l’azote.": "Before any adsorption analysis, the sample must be degassed to remove molecules already present on its surface and within its porosity. This step combines vacuum and controlled heating to free the surface before nitrogen is introduced.",
+    "1. Surface encombrée": "1. Occupied surface",
+    "Avant le dégazage, la surface et les pores peuvent contenir de l’eau, des solvants ou d’autres molécules adsorbées.": "Before degassing, the surface and pores may contain water, solvents or other adsorbed molecules.",
+    "Ces molécules occupent une partie de la surface, ce qui empêchera ensuite l’azote de s’y déposer.": "These molecules occupy part of the surface, preventing nitrogen from subsequently adsorbing there.",
+    "2. Mise sous vide": "2. Vacuum",
+    "Le vide permet d’évacuer progressivement une partie des molécules piégées dans la porosité.": "Vacuum progressively removes some of the molecules trapped within the porosity.",
+    "Les molécules les moins fortement retenues quittent d’abord la surface.": "The least strongly retained molecules leave the surface first.",
+    "3. Chauffe + dégazage": "3. Heating + degassing",
+    "La chauffe accélère la désorption des molécules encore retenues.": "Heating accelerates the desorption of molecules that are still retained.",
+    "Combinée au vide, elle permet de nettoyer complètement la surface avant l’analyse.": "Combined with vacuum, it completely cleans the surface before analysis.",
+    "Vue simplifiée du dégazage": "Simplified view of degassing",
     "Adsorption": "Adsorption",
     "Conclusion": "Conclusion",
     "Comprendre l'adsorption d'azote": "Understanding nitrogen adsorption",
@@ -260,6 +273,16 @@ function HomePage() {
         <PoreTypes />
       </section>
 
+      <section id="degassing" className="section">
+        <TextCard title={tr('Le dégazage : nettoyer la surface avant l’analyse')}>
+          <p>
+            {tr('Avant toute analyse d’adsorption, l’échantillon doit être dégazé afin d’éliminer les molécules déjà présentes sur sa surface et dans sa porosité. Cette étape combine une mise sous vide et une chauffe contrôlée afin de libérer la surface avant l’introduction de l’azote.')}
+          </p>
+        </TextCard>
+
+        <DegassingSequence />
+      </section>
+
       <section id="pp0" className="section">
         <TextCard
           badge={tr('3. P/P₀')}
@@ -372,6 +395,7 @@ function Nav() {
       <a href="#intro">{tr('Intro')}</a>
       <a href="#surface">{tr('Surface')}</a>
       <a href="#pores">{tr('Pores')}</a>
+      <a href="#degassing">{tr('Dégazage')}</a>
       <a href="#pp0">P/P₀</a>
       <a href="#sequence">{tr('Adsorption')}</a>
       <a href="#conclusion">{tr('Conclusion')}</a>
@@ -742,6 +766,155 @@ function AdsorptionSequence() {
 
         <div className="seqCaption">
           {tr("Micropore → monocouche → multicouche → condensation de l'azote")}
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// Fourteen occupied sites per wall out of twenty possible sites: 70% coverage.
+const degassingOccupiedSites = [0, 1, 2, 4, 5, 7, 8, 10, 11, 13, 14, 16, 18, 19]
+const degassingParticles = ['left', 'right'].flatMap((side, sideIndex) =>
+  degassingOccupiedSites.map((site, index) => ({
+    id: `${side}-${site}`,
+    side,
+    position: (site / 19) * 100,
+    kind: (index + sideIndex) % 3,
+    // Six of twenty-eight particles (21%) leave during vacuum alone.
+    weaklyHeld: index === 2 || index === 7 || index === 12,
+    delay: ((index * 5 + sideIndex * 3) % 14) * 0.14,
+    duration: 2.6 + (index % 3) * 0.2,
+    drift: (side === 'left' ? 1 : -1) * (22 + (index * 7) % 20),
+  }))
+)
+
+function DegassingSequence() {
+  const { tr } = useLanguage()
+  const [step, setStep] = useState(0)
+  const [replayKey, setReplayKey] = useState(0)
+  const [inView, setInView] = useState(false)
+  const sequenceRef = useRef(null)
+
+  useEffect(() => {
+    let wasVisible = false
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        const visible = entry.isIntersecting && entry.intersectionRatio >= 0.15
+        if (visible && !wasVisible) {
+          setStep(0)
+          setReplayKey((key) => key + 1)
+        }
+        wasVisible = visible
+        setInView(visible)
+      },
+      // The stacked mobile panel should enter before its slider is used.
+      { threshold: 0.15 }
+    )
+
+    if (sequenceRef.current) observer.observe(sequenceRef.current)
+    return () => observer.disconnect()
+  }, [])
+
+  const steps = [
+    {
+      title: tr('1. Surface encombrée'),
+      paragraphs: [
+        tr('Avant le dégazage, la surface et les pores peuvent contenir de l’eau, des solvants ou d’autres molécules adsorbées.'),
+        tr('Ces molécules occupent une partie de la surface, ce qui empêchera ensuite l’azote de s’y déposer.'),
+      ],
+    },
+    {
+      title: tr('2. Mise sous vide'),
+      paragraphs: [
+        tr('Le vide permet d’évacuer progressivement une partie des molécules piégées dans la porosité.'),
+        tr('Les molécules les moins fortement retenues quittent d’abord la surface.'),
+      ],
+    },
+    {
+      title: tr('3. Chauffe + dégazage'),
+      paragraphs: [
+        tr('La chauffe accélère la désorption des molécules encore retenues.'),
+        tr('Combinée au vide, elle permet de nettoyer complètement la surface avant l’analyse.'),
+      ],
+    },
+  ]
+  const currentStep = steps[step]
+
+  return (
+    <div className="simGrid degassingGrid" ref={sequenceRef}>
+      <div className="controlPanel sequencePanel">
+        <label className="bigValue sequenceBigValue" htmlFor="degassing-step">
+          {currentStep.title}
+        </label>
+        <input
+          id="degassing-step"
+          type="range"
+          min="0"
+          max="2"
+          step="1"
+          value={step}
+          aria-label={tr('Dégazage')}
+          aria-valuetext={`${tr('Étape')} ${step + 1}/3 : ${currentStep.title}`}
+          onChange={(event) => setStep(Number(event.target.value))}
+        />
+        <div aria-live="polite">
+          <div className="state">{tr('Étape')} {step + 1}/3</div>
+          {currentStep.paragraphs.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
+        </div>
+      </div>
+
+      <div
+        className={`cleanSequence degassingVisual ${step === 2 ? 'heating' : ''} ${inView ? '' : 'degassingOffscreen'}`}
+        role="img"
+        aria-label={`${tr('Vue simplifiée du dégazage')} : ${currentStep.title}`}
+      >
+        <div className="seqTitle">{tr('Vue simplifiée du dégazage')}</div>
+        <div key={`${step}-${replayKey}`} className="degassingScene" aria-hidden="true">
+          <div className="seqPore degassingPore">
+            <div className="seqWall left" />
+            <div className="seqWall right" />
+
+            {['left', 'right'].map((side) => (
+              <div key={side} className={`degassingWallSites ${side}`}>
+                {degassingParticles.filter((particle) => particle.side === side).map((particle) => {
+                  const evacuated = step === 2 && particle.weaklyHeld
+                  const departing = !evacuated && (step === 2 || (step === 1 && particle.weaklyHeld))
+                  return (
+                    <span
+                      key={particle.id}
+                      className={`degassingParticle ${evacuated ? 'evacuated' : departing ? 'departing' : ''}`}
+                      style={{
+                        top: `${particle.position}%`,
+                        '--escape-delay': `${particle.delay}s`,
+                        '--escape-duration': `${particle.duration}s`,
+                        '--escape-drift': `${particle.drift}px`,
+                      }}
+                    >
+                      <span className={`degassingContaminant contaminant${particle.kind}`} />
+                    </span>
+                  )
+                })}
+              </div>
+            ))}
+
+            {step > 0 && (
+              <div className="degassingVacuum">
+                <svg viewBox="0 0 100 300" fill="none">
+                  <path
+                    className="degassingFlow"
+                    d="M50 280 C26 252 74 224 50 196 C26 168 74 140 50 112 C30 87 70 62 50 26"
+                  />
+                  <path className="degassingArrowHead" d="M37 40 L50 24 L63 40" />
+                </svg>
+              </div>
+            )}
+          </div>
+
+          {step === 2 && (
+            <svg className="degassingHeat" viewBox="0 0 64 40" fill="none">
+              <path d="M16 27 C26 20 6 16 16 8 M32 27 C42 20 22 16 32 8 M48 27 C58 20 38 16 48 8 M12 34 H52" />
+            </svg>
+          )}
         </div>
       </div>
     </div>
