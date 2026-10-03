@@ -2928,6 +2928,7 @@ body {
 
 .nitrogenCellStep1 .nitrogenCellParticle.freeGas .nitrogenGasMotion {
   animation: nitrogenGasDrift var(--drift-duration) ease-in-out var(--drift-delay) infinite alternate;
+  animation-duration: calc(var(--drift-duration) * 0.75);
 }
 
 /* Entry, adsorption and thermal colour each own a separate element/property. */
@@ -2954,8 +2955,8 @@ body {
 }
 
 @keyframes nitrogenGasDrift {
-  from { transform: translate3d(-1.5px, -2px, 0); }
-  to { transform: translate3d(1.5px, 2px, 0); }
+  from { transform: translate3d(-3px, calc(-1 * var(--drift-y)), 0); }
+  to { transform: translate3d(3px, var(--drift-y), 0); }
 }
 
 .nitrogenCellStep2 .nitrogenCellDewar {

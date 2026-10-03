@@ -1110,6 +1110,7 @@ function NitrogenCellSequence() {
                             '--condense-delay': `${coolDelay + 0.8}s`,
                             '--drift-delay': `${-(index % 7) * 0.6}s`,
                             '--drift-duration': `${3.8 + (index % 4) * 0.4}s`,
+                            '--drift-y': `${Math.hypot(gasX - 180, gasY - 299) < 25 ? 0 : 5}px`,
                           }}
                         >
                           <g className={`nitrogenCellParticle ${site.adsorbed ? 'adsorbed' : 'freeGas'} ${gasY < 196 ? 'fromTube' : ''}`}>
