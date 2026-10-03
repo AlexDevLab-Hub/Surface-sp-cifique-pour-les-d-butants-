@@ -2845,6 +2845,12 @@ body {
   scroll-margin-top: 90px;
 }
 
+@media (min-width: 981px) and (max-width: 1100px) {
+  .nav a[href="#nitrogen-cell"] {
+    padding-inline: 4px;
+  }
+}
+
 .nitrogenCellGrid > * {
   min-width: 0;
 }
@@ -2875,13 +2881,9 @@ body {
   flex-shrink: 0;
 }
 
-.nitrogenCellVisual .seqTitle {
-  max-width: calc(100% - 36px);
-}
-
 .nitrogenCellDiagram {
   position: absolute;
-  inset: 65px 16px 64px;
+  inset: 16px;
 }
 
 .nitrogenCellDiagram svg {
@@ -2924,8 +2926,21 @@ body {
   filter: drop-shadow(0 0 3px rgba(219, 234, 254, 0.38));
 }
 
-.nitrogenCellStep1 .nitrogenCellParticle.freeGas circle {
+.nitrogenCellStep1 .nitrogenCellParticle.freeGas .nitrogenGasMotion {
   animation: nitrogenGasDrift var(--drift-duration) ease-in-out var(--drift-delay) infinite alternate;
+}
+
+/* Entry, adsorption and thermal colour each own a separate element/property. */
+.nitrogenCellStep1 .nitrogenCellEntry {
+  animation: nitrogenGasEnter var(--entry-duration) linear var(--entry-delay) both;
+  will-change: transform, opacity;
+}
+
+@keyframes nitrogenGasEnter {
+  from { transform: translate3d(var(--entry-x), var(--entry-y), 0); opacity: 0; }
+  8% { opacity: 1; }
+  65% { transform: translate3d(var(--entry-mid-x), var(--entry-mid-y), 0); }
+  to { transform: translate3d(0, 0, 0); opacity: 1; }
 }
 
 .nitrogenCellStep1 .nitrogenCellParticle.adsorbed {
@@ -2944,24 +2959,53 @@ body {
 }
 
 .nitrogenCellStep2 .nitrogenCellDewar {
-  animation: nitrogenDewarRise 1.2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  animation: nitrogenDewarRise 1.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
 
 @keyframes nitrogenDewarRise {
   from { transform: translate3d(0, 0, 0); }
-  to { transform: translate3d(0, -124px, 0); }
+  to { transform: translate3d(0, -210px, 0); }
 }
 
 .nitrogenCellStep2 .nitrogenCellParticle.freeGas {
-  animation: nitrogenCellCondense 1.6s linear var(--condense-delay) forwards;
+  animation: nitrogenCellCondense 2s cubic-bezier(0.3, 0.15, 0.35, 1) var(--condense-delay) forwards;
   will-change: transform;
 }
 
+.nitrogenCellStep2 .nitrogenCellParticle.freeGas.fromTube {
+  animation-name: nitrogenCellFromTube;
+  animation-timing-function: linear;
+}
+
 .nitrogenCellStep2 .nitrogenCellParticle circle {
-  animation: nitrogenCellTurnBlue 0.35s ease-out var(--condense-delay) forwards;
+  animation: nitrogenCellTurnBlue 0.8s ease-in-out var(--cool-delay) forwards;
+}
+
+.nitrogenCellStep2 .nitrogenCellParticle.freeGas .nitrogenGasMotion {
+  animation: nitrogenGasSettle var(--condense-delay) ease-in-out forwards;
+}
+
+.nitrogenCellStep2 .nitrogenCellGlass {
+  animation: nitrogenGlassCool 0.8s ease-in-out 1.5s forwards;
+}
+
+@keyframes nitrogenGasSettle {
+  0%, 100% { transform: translate3d(0, 0, 0); }
+  30% { transform: translate3d(1.5px, 2px, 0); }
+  65% { transform: translate3d(-1.5px, -2px, 0); }
+}
+
+@keyframes nitrogenGlassCool {
+  to { stroke: rgba(125, 211, 252, 0.8); }
 }
 
 @keyframes nitrogenCellCondense {
+  from { transform: translate3d(0, 0, 0); }
+  to { transform: translate3d(var(--fall-x), var(--fall-y), 0); }
+}
+
+/* Keep molecules inside the narrow tube until they reach the bulb. */
+@keyframes nitrogenCellFromTube {
   from { transform: translate3d(0, 0, 0); }
   50% { transform: translate3d(0, var(--fall-mid-y), 0); }
   to { transform: translate3d(var(--fall-x), var(--fall-y), 0); }
@@ -2972,94 +3016,27 @@ body {
   to { fill: #60a5fa; }
 }
 
-.nitrogenCondensedLayer {
-  stroke: rgba(96, 165, 250, 0.18);
-  stroke-width: 8;
-  opacity: 0;
-}
-
-.nitrogenCellStep2 .nitrogenCondensedLayer {
-  animation: nitrogenLayerAppear 1.2s ease-out 1.35s forwards;
-}
-
-@keyframes nitrogenLayerAppear {
-  to { opacity: 1; }
-}
-
-.nitrogenCellLegend {
-  position: absolute;
-  bottom: 20px;
-  left: 16px;
-  right: 16px;
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: 8px 18px;
-  color: #dbeafe;
-  font-size: 12px;
-}
-
-.nitrogenCellLegend span {
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-}
-
-.nitrogenCellLegend i {
-  display: inline-block;
-  flex-shrink: 0;
-  border-radius: 50%;
-}
-
-.nitrogenSampleKey {
-  width: 12px;
-  height: 12px;
-  background: #94a3b8;
-  border: 1px solid rgba(226, 232, 240, 0.55);
-}
-
-.nitrogenCellLegend .nitrogenBathKey {
-  width: 13px;
-  height: 8px;
-  border-radius: 3px;
-  border: 1px solid rgba(165, 220, 236, 0.6);
-  background: rgba(125, 211, 252, 0.18);
-}
-
-.nitrogenParticleKey {
-  width: 6px;
-  height: 6px;
-  background: #f8fafc;
-  box-shadow: 0 0 5px rgba(219, 234, 254, 0.3);
-}
-
-.nitrogenParticleKey.condensed {
-  animation: nitrogenLegendTurnBlue 0.35s ease-out 1.35s forwards;
-}
-
-@keyframes nitrogenLegendTurnBlue {
-  to { background: #60a5fa; }
-}
-
 .nitrogenCellOffscreen .nitrogenCellDewar,
+.nitrogenCellOffscreen .nitrogenCellEntry,
 .nitrogenCellOffscreen .nitrogenCellParticle,
+.nitrogenCellOffscreen .nitrogenGasMotion,
 .nitrogenCellOffscreen .nitrogenCellParticle circle,
-.nitrogenCellOffscreen .nitrogenCondensedLayer,
-.nitrogenCellOffscreen .nitrogenParticleKey {
+.nitrogenCellOffscreen .nitrogenCellGlass {
   animation-play-state: paused;
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .nitrogenCellEntry,
   .nitrogenCellParticle,
+  .nitrogenGasMotion,
   .nitrogenCellParticle circle,
   .nitrogenCellDewar,
-  .nitrogenCondensedLayer,
-  .nitrogenParticleKey.condensed {
+  .nitrogenCellGlass {
     animation: none !important;
   }
 
   .nitrogenCellStep2 .nitrogenCellDewar {
-    transform: translate3d(0, -124px, 0);
+    transform: translate3d(0, -210px, 0);
   }
 
   .nitrogenCellStep1 .nitrogenCellParticle.adsorbed,
@@ -3067,15 +3044,14 @@ body {
     transform: translate3d(var(--fall-x), var(--fall-y), 0);
   }
 
-  .nitrogenCellStep2 .nitrogenCellParticle circle,
-  .nitrogenCellStep2 .nitrogenParticleKey.condensed {
+  .nitrogenCellStep2 .nitrogenCellParticle circle {
     fill: #60a5fa;
-    background: #60a5fa;
   }
 
-  .nitrogenCellStep2 .nitrogenCondensedLayer {
-    opacity: 1;
+  .nitrogenCellStep2 .nitrogenCellGlass {
+    stroke: rgba(125, 211, 252, 0.8);
   }
+
 }
 
 /* Degassing shares the adsorption cards and walls; motion is scoped here. */
